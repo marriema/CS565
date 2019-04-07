@@ -19,36 +19,41 @@ factors = db["factors"]
 @app.route('/', methods=["GET", "POST"])
 def index():
 	if not session.get('username'): #user not logged in
-		return render_template('login.html')
+		return jsonify({'message': 'not_logged_in'})
 	else:
-		return render_template('index.html')
+		return jsonify({'message': 'logged_in'})
 
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
 	if request.method == 'GET':
-		return render_template("login.html")
+		return jsonify({'message': 'not_logged_in'})
 	else:
-		if request.form['submit_btn'] == 'signup':
-			newName = request.form['username']
-			newPass = request.form['password']
-			addNewUserAccount(newName, newPass)
+		userName = request.get_json()['username']
+		password = request.get_json()['password']
+		userInfo = users.find_one({"username":userName})
+		foundPassword = userInfo["password"]
 
-			session['username'] = newName
-			return redirect(url_for('index'))
-		else:
-			userName = request.form['username']
-			password = request.form['password']
-			userInfo = users.find_one({"username":userName})
-			foundPassword = userInfo["password"]
-
-			if str(foundPassword) == password:
-				session['username'] = userName
-				return redirect(url_for('index'))
-			else:	
-				return redirect(url_for('login'))
+		if str(foundPassword) == password:
+			session['username'] = userName
+			return jsonify({'message': 'logged_in'})
+		else:	
+			return jsonify({'message': 'not_logged_in'})
 
 
+
+@app.route('/signup', methods=["GET", "POST"])
+def signup():
+	if request.method == 'GET':
+		return jsonify({'message': 'not_logged_in'})
+	else:
+		newName = request.get_json()['username']
+		newPass = request.get_json()['password']
+		addNewUserAccount(newName, newPass)
+
+		session['username'] = newName
+		return jsonify({'message': 'logged_in'})
+		
 
 
 def addNewUserAccount(username, password):
@@ -60,7 +65,7 @@ def addNewUserAccount(username, password):
 @app.route('/logout')
 def logout():
 	session['username'] = None
-	return redirect(url_for('login'))
+	return jsonify({'message': 'not_logged_in'})
 
 
 
