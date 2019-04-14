@@ -1,6 +1,8 @@
 from flask import Flask, abort, request, jsonify, render_template, redirect, url_for, session
 import pymongo
 import json, re
+import datetime
+
 
 
 app = Flask(__name__)
@@ -19,41 +21,40 @@ factors = db["factors"]
 @app.route('/', methods=["GET", "POST"])
 def index():
 	if not session.get('username'): #user not logged in
-		return jsonify({'message': 'not_logged_in'})
+		return redirect(url_for('login'))
 	else:
-		return jsonify({'message': 'logged_in'})
+		return render_template('index.html', username=session.get('username'))
 
 
 @app.route('/login', methods=["GET", "POST"])
 def login():
 	if request.method == 'GET':
-		return jsonify({'message': 'not_logged_in'})
+		return render_template('login.html')
 	else:
-		userName = request.get_json()['username']
-		password = request.get_json()['password']
+		userName = request.form['username']
+		password = request.form['password']
 		userInfo = users.find_one({"username":userName})
 		foundPassword = userInfo["password"]
 
 		if str(foundPassword) == password:
 			session['username'] = userName
-			return jsonify({'message': 'logged_in'})
+			return redirect(url_for('index'))
 		else:	
-			return jsonify({'message': 'not_logged_in'})
+			return redirect(url_for('login'))
 
 
 
 @app.route('/signup', methods=["GET", "POST"])
 def signup():
 	if request.method == 'GET':
-		return jsonify({'message': 'not_logged_in'})
+		return render_template('signup.html')
 	else:
-		newName = request.get_json()['username']
-		newPass = request.get_json()['password']
+		newName = request.form['username']
+		newPass = request.form['password']
 		addNewUserAccount(newName, newPass)
 
 		session['username'] = newName
-		return jsonify({'message': 'logged_in'})
-		
+		return redirect(url_for('index'))
 
 
 def addNewUserAccount(username, password):
@@ -65,7 +66,47 @@ def addNewUserAccount(username, password):
 @app.route('/logout')
 def logout():
 	session['username'] = None
-	return jsonify({'message': 'not_logged_in'})
+	return redirect(url_for('login'))
+
+
+@app.route('/pastPeriods', methods=["GET", "POST"])
+def pastPeriods():
+	if request.method == 'GET':
+		#find last inserted period
+		last_period = periods.find_one(
+  				{'username': session['username']},
+  				sort=[( '_id', pymongo.DESCENDING )])
+				  
+		if last_period is not None:
+			if last_period['end_date'] is None:
+				print last_period
+				return jsonify(status='OK',lastPeriod=str(last_period['start_date']))
+
+		return jsonify(status='OK',lastPeriod='none')
+	else:
+		res = request.get_json()["action"]
+		if res == "start":
+			d = datetime.date.today()
+			day = '%02d' % d.day
+			month = '%02d' % d.month
+			year = '%02d' % d.year
+
+			complete_date = month+'/'+day+'/'+year
+			new_period = {
+				"username": session['username'],
+				"start_date":complete_date,
+				"end_date":None
+			}
+			periods.insert_one(new_period)
+			return 'ok'
+		else:
+			return 'ok'
+
+	return 'ok'
+
+
+
+
 
 
 

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Lunar</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="../static/css/custom.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+</head>
+<body>
+
+<div class="grid-container">
+
+    <div class="header">
+        <img style="position: absolute;right:0px;top:0" src="../static/images/top-right-header-bg.png"> 
+        <h1 style="padding-top:20px;padding-bottom:10px;font-family:Abril FatFace;font-weight:bold;color:#ef88a1;font-size:60px">Lunar</h1>
+        <img style="position:absolute;left:470px;top:80px" width=30% height=20px src="../static/images/break.png">
+        <h4 style="font-family:Old Standard TT;padding-bottom:10px;color:#a4cabc;text-align: center"><i>Know Yourself Better</i></h4>
+        <a style="top: 50px;right:0;position:absolute" href="{{ url_for('logout') }}">Log out</a></h1> 
+    </div>
+
+    <div class="calendar">
+        <div class="card" style="width: 18rem;position:relative;">
+            <img class="card-img-top" src="../static/images/lavendar.jpeg" alt="cover">
+            <h3 id="date"></h3>
+            
+            <p class="card-title">Hello {{ username }}</p>
+            
+            <div class="card-body">
+                <h5 class="card-title">Some update?</h5>
+                <p class="card-text" id=pastPeriods> </p>
+            </div>
+            <ul class="list-group list-group-flush">
+                <li class="list-group-item">
+                    <div id="startToggle" style="display: none">
+                        <label class="switch">
+                            <input type="checkbox" id="start">
+                            <span class="slider round start"></span>
+                        </label> 
+                    </div>
+
+
+                    <div id="endToggle" style="display: none">
+                        <label class="switch">
+                            <input type="checkbox" id="end">
+                            <span class="slider round end"></span>
+                        </label> 
+                    </div>
+                    
+                </li>
+            </ul>
+            <div class="card-body">
+                <a href="#" class="card-link">Cycle History</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="mood">
+
+    </div>
+
+    <div class="visual">
+
+    </div>
+
+    <div class="additional">
+
+    </div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script>
+n =  new Date();
+y = n.getFullYear();
+m = n.getMonth() + 1;
+d = n.getDate();
+document.getElementById("date").innerHTML = m + " / " + d + " / " + y;
+
+
+
+$(document).ready(function(){
+    
+    $.ajax({
+        url: "{{url_for('pastPeriods')}}",
+        type: 'GET',
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            if(response.lastPeriod == 'none')
+            {
+                $("#pastPeriods").text("Shark week starts? Record it here")
+                $("#endToggle").hide()
+                $("#startToggle").show()
+            }
+            else
+            {
+                $("#pastPeriods").text("It seems that your current cycle started on " + response.lastPeriod + "\n" +"Does it end?")
+                $("#endToggle").show()
+                $("#startToggle").hide()
+            }
+        },
+        error: function(error){
+            console.log(error);
+        }
+    });
+});
+
+$("#start").click(function (e) {
+    
+    $.ajax({
+        type: "POST",
+        url: "{{url_for('pastPeriods')}}",
+        data: JSON.stringify({ "action" : "start" } ),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+            
+        }
+    });
+
+});
+
+</script>
+
+</html>
