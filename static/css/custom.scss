@@ -135,3 +135,25 @@
   
     content: "It starts :("
   }
+
+
+.period-container {
+    background-color: #fef8f3;
+
+    .history {
+      width: 50%;
+      height:500px;
+      margin: 80px auto;
+      display: flex;
+      flex-flow: column wrap;
+      border: 1px solid rgb(15, 13, 13);
+
+      .graph {
+        flex-grow: 2;
+      }
+
+      button {
+        padding: 0 20px;
+      }
+    }
+}

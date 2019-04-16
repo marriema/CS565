@@ -2,6 +2,8 @@ from flask import Flask, abort, request, jsonify, render_template, redirect, url
 import pymongo
 import json, re
 import datetime
+from datetime import date
+
 
 
 
@@ -13,7 +15,6 @@ db = client.CS565
 
 users = db["users"]
 periods = db["periods"]
-moods = db["moods"]
 factors = db["factors"]
 
 
@@ -71,21 +72,21 @@ def logout():
 
 @app.route('/pastPeriods', methods=["GET", "POST"])
 def pastPeriods():
-	if request.method == 'GET':
-		#find last inserted period
-		last_period = periods.find_one(
+	#find last inserted period
+	last_period = periods.find_one(
   				{'username': session['username']},
   				sort=[( '_id', pymongo.DESCENDING )])
-				  
+
+	if request.method == 'GET':
 		if last_period is not None:
 			if last_period['end_date'] is None:
 				print last_period
 				return jsonify(status='OK',lastPeriod=str(last_period['start_date']))
 
 		return jsonify(status='OK',lastPeriod='none')
-	else:
+	else:  
 		res = request.get_json()["action"]
-		if res == "start":
+		if res == "start":  #start a new period
 			d = datetime.date.today()
 			day = '%02d' % d.day
 			month = '%02d' % d.month
@@ -98,13 +99,105 @@ def pastPeriods():
 				"end_date":None
 			}
 			periods.insert_one(new_period)
-			return 'ok'
+			return jsonify(status='OK')
+		else:  #end current period
+			d = datetime.date.today()
+			day = '%02d' % d.day
+			month = '%02d' % d.month
+			year = '%02d' % d.year
+
+			complete_date = month+'/'+day+'/'+year
+			periods.update_one(
+				 {'_id': last_period['_id']},
+				{
+				'$set': 
+				{
+					"end_date":complete_date
+				}}, upsert=False)
+			return jsonify(status='OK')
+			
+	return jsonify(status='OK')
+
+
+
+@app.route('/moods', methods=["GET", "POST"])
+def pastMoods():
+	d = datetime.date.today()
+	day = '%02d' % d.day
+	month = '%02d' % d.month	
+	year = '%02d' % d.year
+
+	complete_date = month+'/'+day+'/'+year
+
+	today = factors.find_one(
+  				{'username': session['username'],
+				 'date': complete_date})
+
+	if request.method == 'GET':  #get today's moods and factors
+		if today is not None:
+			print today
+			return jsonify(status='OK',today=today)
+		return jsonify(status='OK',today='none')
+
+	else:  #post moods and factors
+		res = request.get_json()
+		factors_res = res["factors"]
+		moods_res = res["moods"]
+		if today is None:
+			new_record = {
+				"username": session['username'],
+				"date": complete_date,
+				"factors": factors_res,
+				"moods": moods_res
+			}
+			factors.insert_one(new_record)
 		else:
-			return 'ok'
+			factors.update_one(
+				 {'_id': today['_id']},
+				{
+				'$set': 
+				{
+					"factors": factors_res,
+					"moods": moods_res
+				}}, upsert=False)
+		return jsonify(status='OK')
+		
+		
 
-	return 'ok'
+@app.route('/periodHistory')
+def periodHistory():
+	return render_template('periodHistory.html',username=session.get('username'))
 
 
+@app.route('/getPastPeriods')
+def getPastPeriods():
+	history = periods.find({'username': session['username']},sort=[( '_id', pymongo.ASCENDING )])
+	history = list(history)
+	ret = []
+	for i, each in enumerate(history):
+		
+		if each["end_date"] is not None:
+			start_split = each["start_date"].split('/')
+			end_split = each["end_date"].split('/')
+			d0 = date(int(start_split[2]), int(start_split[0]), int(start_split[1]))
+			d1 = date(int(end_split[2]), int(end_split[0]), int(end_split[1]))
+			period_len = abs(d1-d0).days
+
+			cycle_len = 0
+			if i is not len(history)-1:
+				next = history[i+1]
+				cycle_end_split = next["start_date"].split('/')
+				d0 = date(int(end_split[2]), int(end_split[0]), int(end_split[1]))
+				d1 = date(int(cycle_end_split[2]), int(cycle_end_split[0]), int(cycle_end_split[1]))
+				cycle_len = abs(d1-d0).days
+
+			else:
+				d1 = datetime.date.today()
+				cycle_len = abs(d1 - date(int(start_split[2]), int(start_split[0]), int(start_split[1]))).days
+
+			ret.append([each["start_date"], each["end_date"], period_len, cycle_len])
+	print ret
+	return jsonify(status='OK', history=ret)
 
 
 

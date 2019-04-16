@@ -123,4 +123,22 @@ input:checked + .slider:before {
   content: "It starts :(";
 }
 
+.period-container {
+  background-color: #fef8f3;
+}
+.period-container .history {
+  width: 50%;
+  height: 500px;
+  margin: 80px auto;
+  display: flex;
+  flex-flow: column wrap;
+  border: 1px solid #0f0d0d;
+}
+.period-container .history .graph {
+  flex-grow: 2;
+}
+.period-container .history button {
+  padding: 0 20px;
+}
+
 /*# sourceMappingURL=custom.css.map */
