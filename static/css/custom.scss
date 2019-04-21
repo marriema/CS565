@@ -37,9 +37,9 @@
 .grid-container {
     display: grid;
     grid-template-areas:
-      'header header header header'
-      'calendar calendar mood mood'
-      'visual visual visual additional';
+      'header header header'
+      'calendar calendar mood'
+      'visual visual additional';
     grid-gap: 10px;
     padding: 0px 50px;
 }
@@ -137,23 +137,66 @@
   }
 
 
+#logout {
+  top:50px;
+  right:50px;
+}
+
+#back {
+  left:50px;
+  top:50px;
+}
+
+
 .period-container {
     background-color: #fef8f3;
 
+    .header a{
+      position:absolute;
+      
+      font-family:'Lato',sans-serif;
+     
+      border-color: #ef88a1;
+      color: #ef88a1;
+
+    }
+
+    .header a:hover{
+      background: hsl(347, 69%, 87%);
+    }
+    
     .history {
       width: 50%;
       height:500px;
-      margin: 80px auto;
+      margin: 20px auto 40px auto;
       display: flex;
       flex-flow: column wrap;
-      border: 1px solid rgb(15, 13, 13);
+      border-top: 1px dashed #ef88a1;
+      border-bottom: 1px dashed #ef88a1;
+
 
       .graph {
         flex-grow: 2;
+        display: none;
+        width: 500px;
+        height: 300px;
+      }
+
+      .form {
+        
       }
 
       button {
-        padding: 0 20px;
+        color: #773344;
+        border-color: #773344;
+        
       }
+      button:hover, button:active{
+        background-color:#e3b5a4;
+        border-color: #773344;
+        outline: #773344;
+        box-shadow: #773344;
+      }
+      
     }
 }

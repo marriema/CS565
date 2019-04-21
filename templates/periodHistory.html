@@ -16,22 +16,27 @@
 
 <body style="font-family: 'Lato', sans-serif">
 
+
 <div class="period-container">
 
     <div class="header">
-        <img style="position: absolute;right:0px;top:0" src="../static/images/top-right-header-bg.png"> 
+        <img style="position:absolute;right:0px;top:0" src="../static/images/top-right-header-bg.png"> 
         <h1 style="padding-top:20px;padding-bottom:10px;font-family:Abril FatFace;font-weight:bold;color:#ef88a1;font-size:60px">Lunar</h1>
         <img style="position:absolute;left:470px;top:80px" width=30% height=20px src="../static/images/break.png">
         <h4 style="font-family:Old Standard TT;padding-bottom:10px;color:#a4cabc;text-align: center"><i>Know Yourself Better</i></h4>
-        <a style="top: 50px;right:0;position:absolute" href="{{ url_for('logout') }}">Log out</a></h1> 
+        <a id="logout" href="{{ url_for('logout') }}" class="btn btn-outline-secondary">Logout</a>
+        <a id="back" href="{{ url_for('index') }}" class="btn btn-outline-secondary">Back</a>
     </div>
 
     <br>
+    
+
     <h3 style="text-align: center">Here's your period history</h3>
     <div class="history">
-        <div style="text-align: center">
-            <button>graph</button>
-            <button>history</button>
+        <div style="text-align:center;padding:20px 0;">
+            <button id="graph_but" type="button" class="btn btn-outline-secondary">graph</button>
+            <button id="form_but" type="button" class="btn btn-outline-secondary">history</button>
+
         </div>
 
         <p>Your average period lasts: <span id="average_period"></span></p>
@@ -41,21 +46,36 @@
             <div id="container" style="width: 500px; height: 300px;"></div>
         </div>
 
+        <table class="form">
+            <tr>
+                <th>start date</th>
+                <th>end date</th> 
+                <th>period length</th>
+                <th>cycle length</th>
+            </tr>
+        </table>
+
         
 
     </div>
 
 </div> 
 
+<br>
+<br>
+<br>
 <footer style="position:relative">
     <img style="position:absolute; bottom:0" src="../static/images/footer-bg.png">
 </footer>
 </body>
 
 <script lang="javascript" type="text/javascript">
+
     var period_list = []
     var cycle_list = []
     var start_dates = []
+    var end_dates = []
+    var not_finished_period;
 
     $(document).ready(function(){
         $.ajax({
@@ -67,46 +87,36 @@
             console.log(response)
             $.each(response.history, function(i, val) {
                 start_dates.push(val[0]);
+                end_dates.push(val[1]);
                 period_list.push(parseInt(val[2]));
                 cycle_list.push(parseInt(val[3]));
             })
 
-            var chart = new DataViz.Chart({
-                title: { text: 'Stacked Column Chart' },
-                animation: { duration: 1 },
-                shadows: {
-                    enabled: true
-                },
-                axes: [
-                    {
-                        type: 'category',
-                        location: 'bottom',
-                        categories: start_dates
-                    }
-                ],
-                series: [
-                    {
-                        type: 'stackedColumn',
-                        title: 'period length',
-                        data: period_list,
-                        labels: {
-                            font: '12px sans-serif'
-                        }
-                    },
-                    {
-                        type: 'stackedColumn',
-                        title: 'cycle length',
-                        data: cycle_list,
-                        labels: {
-                            font: '12px sans-serif'
-                        }
-                    }
-                ]
-            });
-            chart.write('container');
+            if(response.not_finished_period != null)
+                not_finished_period = response.not_finished_period
+
+        
+
+            var data;
+            for(i = 0; i < period_list.length; i++)
+            {
+                data += "<tr><td>"+start_dates[i]+"</td><td>"+end_dates[i]+"</td><td>"+period_list[i]+"</td><td>"+cycle_list[i]+"</td></tr>";   
+            }
+            if(not_finished_period != null)
+                data += "<tr><td>"+not_finished_period+"</td><td>"+"continued"+"</td><td>"+"continued"+"</td><td>"+"continued"+"</td></tr>";   
+            $('.form').append(data);
+           
             
             $(average_period).text(calculate_average(period_list));
             $(average_cycle).text(calculate_average(cycle_list));
+
+            if(response.history.length == 0) //no previous periods
+            {
+                $("#graph_but").attr("disabled", true); 
+                $(average_period).text("");
+                $(average_cycle).text("");
+            }
+
         },
         error: function(error){
             console.log(error);
@@ -123,6 +133,62 @@
         var avg = total / arr.length;
         return avg;
     }
+
+    $("#graph_but").click(function(){
+        $(".graph").show();
+        $(".form").hide();
+        if($('#container').is(':empty')) 
+        {
+            var chart = new DataViz.Chart({
+                    font: 'Lato',
+                    title: { text: 'Past Cycles' },
+                    border: {
+                        cornerRadius: 20,
+                        lineWidth: 4,
+                        strokeStyle: '#f7bbaa'
+                    },
+                    animation: { duration: 1 },
+                    shadows: {
+                        enabled: true
+                    },
+                    axes: [
+                        {
+                            type: 'category',
+                            location: 'bottom',
+                            categories: start_dates
+                        }
+                    ],
+                    series: [
+                        {
+                            type: 'stackedColumn',
+                            title: 'period length',
+                            fillStyle: '#f1bf98',
+                            data: period_list,
+                            labels: {
+                                font: '12px sans-serif'
+                            }
+                        },
+                        {
+                            type: 'stackedColumn',
+                            title: 'cycle length',
+                            fillStyle: '#87bba2',
+                            data: cycle_list,
+                            labels: {
+                                font: '12px sans-serif'
+                            }
+                        }
+                    ]
+                });
+                chart.write('container');
+        }
+    });
+
+    $("#form_but").click(function(){
+        $(".graph").hide();
+        $(".form").show();
+    });
+
+
     
     
 </script>

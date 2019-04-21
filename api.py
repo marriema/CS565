@@ -174,6 +174,8 @@ def getPastPeriods():
 	history = periods.find({'username': session['username']},sort=[( '_id', pymongo.ASCENDING )])
 	history = list(history)
 	ret = []
+	not_finished_period = None
+
 	for i, each in enumerate(history):
 		
 		if each["end_date"] is not None:
@@ -196,9 +198,17 @@ def getPastPeriods():
 				cycle_len = abs(d1 - date(int(start_split[2]), int(start_split[0]), int(start_split[1]))).days
 
 			ret.append([each["start_date"], each["end_date"], period_len, cycle_len])
-	print ret
-	return jsonify(status='OK', history=ret)
+		else: #current not_finished period
+			not_finished_period = each["start_date"]
 
+	print ret
+	return jsonify(status='OK', history=ret, not_finished_period=not_finished_period)
+
+
+
+@app.route('/getPastFactors')
+def getPastFactors():
+	
 
 
 

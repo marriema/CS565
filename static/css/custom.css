@@ -32,7 +32,7 @@
 
 .grid-container {
   display: grid;
-  grid-template-areas: "header header header header" "calendar calendar mood mood" "visual visual visual additional";
+  grid-template-areas: "header header header" "calendar calendar mood" "visual visual additional";
   grid-gap: 10px;
   padding: 0px 50px;
 }
@@ -123,22 +123,52 @@ input:checked + .slider:before {
   content: "It starts :(";
 }
 
+#logout {
+  top: 50px;
+  right: 50px;
+}
+
+#back {
+  left: 50px;
+  top: 50px;
+}
+
 .period-container {
   background-color: #fef8f3;
+}
+.period-container .header a {
+  position: absolute;
+  font-family: "Lato", sans-serif;
+  border-color: #ef88a1;
+  color: #ef88a1;
+}
+.period-container .header a:hover {
+  background: #f5c7d1;
 }
 .period-container .history {
   width: 50%;
   height: 500px;
-  margin: 80px auto;
+  margin: 20px auto 40px auto;
   display: flex;
   flex-flow: column wrap;
-  border: 1px solid #0f0d0d;
+  border-top: 1px dashed #ef88a1;
+  border-bottom: 1px dashed #ef88a1;
 }
 .period-container .history .graph {
   flex-grow: 2;
+  display: none;
+  width: 500px;
+  height: 300px;
 }
 .period-container .history button {
-  padding: 0 20px;
+  color: #773344;
+  border-color: #773344;
+}
+.period-container .history button:hover, .period-container .history button:active {
+  background-color: #e3b5a4;
+  border-color: #773344;
+  outline: #773344;
+  box-shadow: #773344;
 }
 
 /*# sourceMappingURL=custom.css.map */
