@@ -5,6 +5,7 @@ import datetime
 from datetime import date
 
 
+from mystat import get_topk_factors
 
 
 app = Flask(__name__)
@@ -40,7 +41,7 @@ def login():
 		if str(foundPassword) == password:
 			session['username'] = userName
 			return redirect(url_for('index'))
-		else:	
+		else:
 			return redirect(url_for('login'))
 
 
@@ -208,10 +209,18 @@ def getPastPeriods():
 
 @app.route('/getPastFactors')
 def getPastFactors():
-	
+	pass
 
 
-
+@app.route('/get_factors', methods=["GET"])
+def get_factors():
+	# Retrieve all the everyday moods, factors
+	data = factors.find({"username" : session["username"]})
+	data_list = list(data)
+	top_k = get_topk_factors(data_list)
+	return jsonify(status='OK', data = list(data))
+	# Pass the data to stat module
+	# Return top k factors and their scores as json string
 
 if __name__ == '__main__':
 	app.run(debug = True)

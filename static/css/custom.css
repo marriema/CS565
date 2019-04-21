@@ -32,7 +32,7 @@
 
 .grid-container {
   display: grid;
-  grid-template-areas: "header header header" "calendar calendar mood" "visual visual additional";
+  grid-template-areas: "header header header" "calendar mood factor" "visual visual additional";
   grid-gap: 10px;
   padding: 0px 50px;
 }
