@@ -136,6 +136,7 @@ def pastMoods():
 
 	if request.method == 'GET':  #get today's moods and factors
 		if today is not None:
+			today['_id'] = ""
 			print today
 			return jsonify(status='OK',today=today)
 		return jsonify(status='OK',today='none')
