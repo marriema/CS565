@@ -5,28 +5,30 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" type="text/css" href="../static/css/custom.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/mood.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script type='text/javascript' src='../static/js/mood.js'></script>
 </head>
-<body>
+<body onclick="detectClick(event)">
 
 <div class="grid-container">
 
     <div class="header">
-        <img style="position: absolute;right:0px;top:0" src="../static/images/top-right-header-bg.png"> 
+        <img style="position: absolute;right:0px;top:0" src="../static/images/top-right-header-bg.png">
         <h1 style="padding-top:20px;padding-bottom:10px;font-family:Abril FatFace;font-weight:bold;color:#ef88a1;font-size:60px">Lunar</h1>
         <img style="position:absolute;left:470px;top:80px" width=30% height=20px src="../static/images/break.png">
         <h4 style="font-family:Old Standard TT;padding-bottom:10px;color:#a4cabc;text-align: center"><i>Know Yourself Better</i></h4>
-        <a style="top: 50px;right:0;position:absolute" href="{{ url_for('logout') }}">Log out</a></h1> 
+        <a style="top: 50px;right:0;position:absolute" href="{{ url_for('logout') }}">Log out</a></h1>
     </div>
 
     <div class="calendar">
         <div class="card" style="width: 18rem;position:relative;">
             <img class="card-img-top" src="../static/images/lavendar.jpeg" alt="cover">
             <h3 id="date"></h3>
-            
+
             <p class="card-title">Hello {{ username }}</p>
-            
+
             <div class="card-body">
                 <h5 class="card-title">Some update?</h5>
                 <p class="card-text" id=pastPeriods> </p>
@@ -37,7 +39,7 @@
                         <label class="switch">
                             <input type="checkbox" id="start">
                             <span class="slider round start"></span>
-                        </label> 
+                        </label>
                     </div>
 
 
@@ -45,9 +47,9 @@
                         <label class="switch">
                             <input type="checkbox" id="end">
                             <span class="slider round end"></span>
-                        </label> 
+                        </label>
                     </div>
-                    
+
                 </li>
             </ul>
             <div class="card-body">
@@ -56,16 +58,340 @@
         </div>
     </div>
 
-    <div class="mood">
-
+    <div class="mood" style="width:25rem">
+      <div class="card" style="width: 100%;position:relative;">
+        <div class="mood_slider">
+          <div class="slider-inner">
+              <div class="slider-origin">
+                <div id="frisky" class="slider-item" style="background-color:#7befb2">Frisky</div>
+                <div id="happy" class="slider-item" style="background-color:#f27935">Happy</div>
+                <div id="fine" class="slider-item">Fine</div>
+                <div id="ok" class="slider-item" style="background-color:#67809f">OK</div>
+                <div id="upset" class="slider-item" style="background-color:#d91e18">Upset</div>
+                <div id="sad" class="slider-item" style="background-color:#f4f776">Sad</div>
+                <div id="depressed" class="slider-item" style="background-color:#6bb9f0">Depressed</div>
+              </div>
+          </div>
+        </div>
+        <hr style="margin-top:400px;padding:none">
+        <div class="setmood" style="height: 100%;padding-left: 10px;">
+            <div><span id="mood1">Feeling frisky?</span><button id="set_firstmood" type="button" style="border-color: #7befb2;background-color: #7befb2;margin-left:10px" class="btn btn-primary btn-sm active">Yes!</button></div>
+            <div style="margin-top:15px"><span id="mood2">Had a different mood later in the day? select again!</span><button id="set_secondmood" type="button" style="display: none; border-color: #7befb2;background-color: #7befb2;margin-left:10px" class="btn btn-primary btn-sm active">Yes!</button></div>
+        </div>
+      </div>
     </div>
 
     <div class="visual">
 
     </div>
 
-    <div class="additional">
+    <div class="factor" style="width:25rem">
+      <div class="card" style="width: 100%;position:relative;">
+        <button id="prevfactor" type="button" style="" class="btn btn-primary btn-sm active"> Prev </button>
 
+
+        <div class="water" style="">
+          <div>
+            <div id="w1" class="watercontainer waterarea">
+              <div>
+                <img id="w1" style="user-select: none;" src="../static/images/water.png">
+              </div>
+            </div>
+            <span style="margin-left:30%;color:#74b9ff;font-weight:normal">1 - 2 glass</span>
+          </div>
+
+          <div>
+            <div id="w2" class="watercontainer waterarea">
+              <div style="display:flex; flex-direction:row; justify-content:center;">
+                <img id="w2" style="user-select: none;padding:0; margin:0" src="../static/images/water.png">
+                <img id="w2" style="user-select: none;padding:0; margin:0" src="../static/images/water.png">
+              </div>
+            </div>
+            <span style="margin-left:30%;color:#74b9ff;font-weight:normal">3 - 4 glass</span>
+          </div>
+
+          <div>
+            <div id="w3" class="watercontainer waterarea">
+              <div style="display:flex; flex-direction:row; justify-content:center; flex-wrap:wrap">
+                <img id="w2" style="user-select: none;padding:0; margin:0" src="../static/images/water.png">
+                <img id="w3"style="user-select: none;padding:0; margin:0" src="../static/images/water.png">
+                <img id="w3" style="user-select: none;padding:0; margin:0" src="../static/images/water.png">
+              </div>
+            </div>
+            <span style="margin-left:30%;color:#74b9ff;font-weight:normal">5 - 6 glass</span>
+          </div>
+
+          <div>
+            <div id="w4" class="watercontainer waterarea">
+              <div style="display:flex; flex-direction:row; justify-content:center; flex-wrap:nowrap">
+                <img id="w4" style="user-select: none;padding:0; margin:0" src="../static/images/water.png">
+                <img id="w4" style="user-select: none;padding:0; margin:0" src="../static/images/water.png">
+                <img id="w4" style="user-select: none;padding:0; margin:0" src="../static/images/water.png">
+                <img id="w4" style="user-select: none;padding:0; margin:0" src="../static/images/water.png">
+              </div>
+            </div>
+            <span style="margin-left:30%;color:#74b9ff;font-weight:normal">7+ glass</span>
+          </div>
+        </div>
+
+
+
+        <div class="sleep" style="display:none">
+          <div id="s1" class="sleepcontainer sleeparea">
+            <div>
+              <img id="s1" style="user-select: none;" src="../static/images/pillow.png">
+            </div>
+          </div>
+
+          <div id="s2" class="sleepcontainer sleeparea">
+            <div style="display:flex; flex-direction:row; justify-content:center;">
+              <img id="s2" style="user-select: none;padding:0; margin:0" src="../static/images/pillow.png">
+              <img id="s2" style="user-select: none;padding:0; margin:0" src="../static/images/pillow.png">
+            </div>
+          </div>
+
+          <div id="s3" class="sleepcontainer sleeparea">
+            <div style="display:flex; flex-direction:row; justify-content:center; flex-wrap:wrap">
+              <img id="s3" style="user-select: none;padding:4px; margin:0" src="../static/images/pillow.png">
+              <img id="s3" style="user-select: none;padding:4px; margin:0" src="../static/images/pillow.png">
+              <img id="s3" style="user-select: none;padding:4px; margin:0" src="../static/images/pillow.png">
+            </div>
+          </div>
+
+          <div id="s4" class="sleepcontainer sleeparea">
+            <div style="display: flex;flex-direction: row;flex-wrap: wrap; justify-content:center;">
+              <img id="s4" style="user-select: none;padding:4px; margin:0" src="../static/images/pillow.png">
+              <img id="s4" style="user-select: none;padding:4px; margin:0" src="../static/images/pillow.png">
+              <img id="s4" style="user-select: none;padding:4px; margin:0" src="../static/images/pillow.png">
+              <img id="s4" style="user-select: none;padding:4px; margin:0" src="../static/images/pillow.png">
+            </div>
+          </div>
+        </div>
+
+        <div class="exercise" style="display:none">
+          <div id="e1" class="exercisecontainer exercisearea">
+            <div>
+              <img id="e1" style="user-select: none;" src="../static/images/exercise.png">
+            </div>
+          </div>
+
+          <div id="e2" class="exercisecontainer exercisearea">
+            <div style="display:flex; flex-direction:row; justify-content:center;">
+              <img id="e2" style="user-select: none;padding:6px; margin:0" src="../static/images/exercise.png">
+              <img id="e2" style="user-select: none;padding:6px; margin:0" src="../static/images/exercise.png">
+            </div>
+          </div>
+
+          <div id="e3" class="exercisecontainer exercisearea">
+            <div style="display:flex; flex-direction:row; justify-content:center; flex-wrap:wrap">
+              <img id="e3" style="user-select: none;padding:8px; margin:0" src="../static/images/exercise.png">
+              <img id="e3"style="user-select: none;padding:8px; margin:0" src="../static/images/exercise.png">
+              <img id="e3" style="user-select: none;padding:8px; margin:0" src="../static/images/exercise.png">
+            </div>
+          </div>
+
+          <div id="e4" class="exercisecontainer exercisearea">
+            <div style="display: flex;flex-direction: row;flex-wrap: wrap; justify-content:center;">
+              <img id="e4" style="user-select: none;padding:8px; margin:0" src="../static/images/exercise.png">
+              <img id="e4" style="user-select: none;padding:8px; margin:0" src="../static/images/exercise.png">
+              <img id="e4" style="user-select: none;padding:8px; margin:0" src="../static/images/exercise.png">
+              <img id="e4" style="user-select: none;padding:8px; margin:0" src="../static/images/exercise.png">
+            </div>
+          </div>
+        </div>
+
+        <div class="alcohol" style="display:none">
+          <div id="a1" class="alcoholcontainer alcoholarea">
+            <div>
+              <img id="a1" style="user-select: none;" src="../static/images/glass.png">
+            </div>
+          </div>
+
+          <div id="a2" class="alcoholcontainer alcoholarea">
+            <div style="display:flex; flex-direction:row; justify-content:center;">
+              <img id="a2" style="user-select: none;padding:4px; margin:0" src="../static/images/glass.png">
+              <img id="a2" style="user-select: none;padding:4px; margin:0" src="../static/images/glass.png">
+            </div>
+          </div>
+
+          <div id="a3" class="alcoholcontainer alcoholarea">
+            <div style="display:flex; flex-direction:row; justify-content:center; flex-wrap:wrap">
+              <img id="a3" style="user-select: none;padding-left:4px; margin:0" src="../static/images/glass.png">
+              <img id="a3"style="user-select: none;padding-left:4px; margin:0" src="../static/images/glass.png">
+              <img id="a3" style="user-select: none;padding-left:4px; margin:0" src="../static/images/glass.png">
+            </div>
+          </div>
+
+          <div id="a4" class="alcoholcontainer alcoholarea">
+            <div style="display: flex;flex-direction: row;flex-wrap: wrap; justify-content:center;">
+              <img id="a4" style="user-select: none;padding:4px; margin:0" src="../static/images/glass.png">
+              <img id="a4" style="user-select: none;padding:4px; margin:0" src="../static/images/glass.png">
+              <img id="a4" style="user-select: none;padding:4px; margin:0" src="../static/images/glass.png">
+              <img id="a4" style="user-select: none;padding:4px; margin:0" src="../static/images/glass.png">
+            </div>
+          </div>
+        </div>
+
+        <div class="caffeine" style="display:none">
+          <div id="c1" class="caffeinecontainer caffeinearea">
+            <div>
+              <img id="c1" style="user-select: none;" src="../static/images/coffee.png">
+            </div>
+          </div>
+
+          <div id="c2" class="caffeinecontainer caffeinearea">
+            <div style="display:flex; flex-direction:row; justify-content:center;">
+              <img id="c2" style="user-select: none;padding:4px; margin:0" src="../static/images/coffee.png">
+              <img id="c2" style="user-select: none;padding:4px; margin:0" src="../static/images/coffee.png">
+            </div>
+          </div>
+
+          <div id="c3" class="caffeinecontainer caffeinearea">
+            <div style="display:flex; flex-direction:row; justify-content:center; flex-wrap:wrap">
+              <img id="c3" style="user-select: none;padding-left:4px; margin:0" src="../static/images/coffee.png">
+              <img id="c3"style="user-select: none;padding-left:4px; margin:0" src="../static/images/coffee.png">
+              <img id="c3" style="user-select: none;padding-left:4px; margin:0" src="../static/images/coffee.png">
+            </div>
+          </div>
+
+          <div id="c4" class="caffeinecontainer caffeinearea">
+            <div style="display: flex;flex-direction: row;flex-wrap: wrap; justify-content:center;">
+              <img id="c4" style="user-select: none;padding:4px; margin:0" src="../static/images/coffee.png">
+              <img id="c4" style="user-select: none;padding:4px; margin:0" src="../static/images/coffee.png">
+              <img id="c4" style="user-select: none;padding:4px; margin:0" src="../static/images/coffee.png">
+              <img id="c4" style="user-select: none;padding:4px; margin:0" src="../static/images/coffee.png">
+            </div>
+          </div>
+        </div>
+
+        <div class="sugar" style="display:none">
+          <div id="u1" class="sugarcontainer sugararea">
+            <div>
+              <img id="u1" style="user-select: none;" src="../static/images/sugar.png">
+            </div>
+          </div>
+
+          <div id="u2" class="sugarcontainer sugararea">
+            <div style="display:flex; flex-direction:row; justify-content:center;">
+              <img id="u2" style="user-select: none;padding:4px; margin:0" src="../static/images/sugar.png">
+              <img id="u2" style="user-select: none;padding:4px; margin:0" src="../static/images/sugar.png">
+            </div>
+          </div>
+
+          <div id="u3" class="sugarcontainer sugararea">
+            <div style="display:flex; flex-direction:row; justify-content:center; flex-wrap:wrap">
+              <img id="u3" style="user-select: none;padding-left:4px; margin:0" src="../static/images/sugar.png">
+              <img id="u3"style="user-select: none;padding-left:4px; margin:0" src="../static/images/sugar.png">
+              <img id="u3" style="user-select: none;padding-left:4px; margin:0" src="../static/images/sugar.png">
+            </div>
+          </div>
+
+          <div id="u4" class="sugarcontainer sugararea">
+            <div style="display: flex;flex-direction: row;flex-wrap: wrap; justify-content:center;">
+              <img id="u4" style="user-select: none;padding:4px; margin:0" src="../static/images/sugar.png">
+              <img id="u4" style="user-select: none;padding:4px; margin:0" src="../static/images/sugar.png">
+              <img id="u4" style="user-select: none;padding:4px; margin:0" src="../static/images/sugar.png">
+              <img id="u4" style="user-select: none;padding:4px; margin:0" src="../static/images/sugar.png">
+            </div>
+          </div>
+        </div>
+
+        <div class="social" style="display:none">
+          <div id="o1" class="socialcontainer socialarea">
+            <div>
+              <img id="o1" style="user-select: none;" src="../static/images/social.png">
+            </div>
+          </div>
+
+          <div id="o2" class="socialcontainer socialarea">
+            <div style="display:flex; flex-direction:row; justify-content:center;">
+              <img id="o2" style="user-select: none;padding:4px; margin:0" src="../static/images/social.png">
+              <img id="o2" style="user-select: none;padding:4px; margin:0" src="../static/images/social.png">
+            </div>
+          </div>
+
+          <div id="o3" class="socialcontainer socialarea">
+            <div style="display:flex; flex-direction:row; justify-content:center; flex-wrap:wrap">
+              <img id="o3" style="user-select: none;padding-left:4px; margin:0" src="../static/images/social.png">
+              <img id="o3"style="user-select: none;padding-left:4px; margin:0" src="../static/images/social.png">
+              <img id="o3" style="user-select: none;padding-left:4px; margin:0" src="../static/images/social.png">
+            </div>
+          </div>
+
+          <div id="o4" class="socialcontainer socialarea">
+            <div style="display: flex;flex-direction: row;flex-wrap: wrap; justify-content:center;">
+              <img id="o4" style="user-select: none;padding:4px; margin:0" src="../static/images/social.png">
+              <img id="o4" style="user-select: none;padding:4px; margin:0" src="../static/images/social.png">
+              <img id="o4" style="user-select: none;padding:4px; margin:0" src="../static/images/social.png">
+              <img id="o4" style="user-select: none;padding:4px; margin:0" src="../static/images/social.png">
+            </div>
+          </div>
+        </div>
+
+        <div class="food" style="display:none">
+          <div id="f1" class="foodcontainer foodarea">
+            <div>
+              <img id="f1" style="user-select: none;" src="../static/images/food.png">
+            </div>
+          </div>
+
+          <div id="f2" class="foodcontainer foodarea">
+            <div style="display:flex; flex-direction:row; justify-content:center;">
+              <img id="f2" style="user-select: none;padding:4px; margin:0" src="../static/images/food.png">
+              <img id="f2" style="user-select: none;padding:4px; margin:0" src="../static/images/food.png">
+            </div>
+          </div>
+
+          <div id="f3" class="foodcontainer foodarea">
+            <div style="display:flex; flex-direction:row; justify-content:center; flex-wrap:wrap">
+              <img id="f3" style="user-select: none;padding-left:4px; margin:0" src="../static/images/food.png">
+              <img id="f3"style="user-select: none;padding-left:4px; margin:0" src="../static/images/food.png">
+              <img id="f3" style="user-select: none;padding-left:4px; margin:0" src="../static/images/food.png">
+            </div>
+          </div>
+
+          <div id="f4" class="foodcontainer foodarea">
+            <div style="display: flex;flex-direction: row;flex-wrap: wrap; justify-content:center;">
+              <img id="f4" style="user-select: none;padding:4px; margin:0" src="../static/images/food.png">
+              <img id="f4" style="user-select: none;padding:4px; margin:0" src="../static/images/food.png">
+              <img id="f4" style="user-select: none;padding:4px; margin:0" src="../static/images/food.png">
+              <img id="f4" style="user-select: none;padding:4px; margin:0" src="../static/images/food.png">
+            </div>
+          </div>
+        </div>
+
+        <button id="nextfactor" type="button" style="outline:none;" class="btn btn-primary btn-sm active"> Next </button>
+
+        <!--
+        <ul style="list-style-type:none">
+          <li>
+            water <input type="text" id="water">
+          </li>
+          <li>
+            eat <input type="text" id="eat">
+          </li>
+          <li>
+            exercise <input type="text" id="exercise">
+          </li>
+          <li>
+            sleep <input type="text" id="sleep">
+          </li>
+          <li>
+            social <input type="text" id="social">
+          </li>
+          <li>
+            Caffeine <input type="text" id="caffeine">
+          </li>
+          <li>
+            Alcohol <input type="text" id="alcohol">
+          </li>
+          <li>
+            Sugar <input type="text" id="sugar">
+          </li>
+        </ul>
+        <button id="submit_factors" type="button" style="" class="btn btn-primary active">submit</button>
+      -->
+      </div>
     </div>
 
 </body>
@@ -73,7 +399,22 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
 <script>
+quantities = [-1,-1,-1,-1,-1,-1,-1,-1];
+id2factors = ["w", "s", "e", "a", "c", "u", "o", "f"]
+factors = ["water", "sleep","exercise","alcohol","caffeine","sugar","social","eat"]
+moods = ["frisky", "happy", "fine", "ok", "upset", "sad", "depressed"]
+mood_colors = ["#7befb2","#f27935","#800080","#67809f", "#d91e18", "#f4f776","#6bb9f0"]
+factor_colors = ["#74b9ff","#d5b8ff","#fcd670","#fcd670","#d91e18","#d2527f","#95a5a6","#f9b42d"];
+
+mood1 = "";
+mood1_confirmed = false;
+mood2 = "";
+mood2_confirmed = false;
+
+curr_factor = 0;
+
 n =  new Date();
 y = n.getFullYear();
 m = n.getMonth() + 1;
@@ -83,7 +424,7 @@ document.getElementById("date").innerHTML = m + " / " + d + " / " + y;
 
 
 $(document).ready(function(){
-    
+
     $.ajax({
         url: "{{url_for('pastPeriods')}}",
         type: 'GET',
@@ -107,10 +448,40 @@ $(document).ready(function(){
             console.log(error);
         }
     });
+
+    $.ajax({
+        url: "{{url_for('pastMoods')}}",
+        type: 'GET',
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log(response.today);
+            if(response.today == 'none' || (response.today.moods.mood1 == null && response.today.moods.mood2 == null))
+            {
+                // Don't do anything
+                // $("#mood1").text("hello world")
+            }
+            else
+            {
+                if(response.today.moods.mood1 != null && response.today.moods.mood2 == null) {
+                  $("#mood1").text("You were " + response.today.moods.mood1 + " today")
+                  $("#mood2").text("Do you feel xxx now?")
+                }
+                if(response.today.moods.mood1 != null && response.today.moods.mood2 != null) {
+                  $("#mood1").text("You were " + response.today.moods.mood1 + " today")
+                  $("#mood2").text("You were " + response.today.moods.mood2 + " today")
+                }
+            }
+        },
+        error: function(error){
+                console.log(error);
+        }
+    });
+
 });
 
 $("#start").click(function (e) {
-    
+
     $.ajax({
         type: "POST",
         url: "{{url_for('pastPeriods')}}",
@@ -118,12 +489,155 @@ $("#start").click(function (e) {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
-            
+
         }
     });
 
 });
 
+$("#set_firstmood").click(function (e) {
+    mood1 = mood1 || "frisky";
+    mood1_confirmed = true;
+
+    $.ajax({
+        type: "POST",
+        url: "{{url_for('pastMoods')}}",
+        data: JSON.stringify({ "moods" : {"mood1":mood1, "mood2":""}, "factors" : {}} ),
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        success: function (data) {
+          console.log("post first mood success");
+        }
+    });
+
+    $("#mood1").text("You were " + mood1 + " today")
+    $('#set_firstmood').css("display", "none");
+    $("#mood2").text("Feeling " + mood1 + "?");
+    $('#set_secondmood').css("display", "");
+    $('#set_secondmood').css("background-color", mood_colors[moods.indexOf(mood2)]);
+    $('#set_secondmood').css("border-color", mood_colors[moods.indexOf(mood2)])
+});
+
+$("#set_secondmood").click(function (e) {
+  mood2 = mood2 || mood1;
+  mood2_confirmed = true;
+  $.ajax({
+      type: "POST",
+      url: "{{url_for('pastMoods')}}",
+      data: JSON.stringify({ "moods" : {"mood1":mood1, "mood2":mood2}, "factors" : {}} ),
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      success: function (data) {
+        console.log("post first mood success");
+      }
+  });
+  $("#mood2").text("You were " + mood2 + " today")
+  $('#set_secondmood').css("display", "none");
+});
+
+
+$("#prevfactor").click(function (e) {
+  if(curr_factor == 0) {
+    return;
+  }
+
+  last_factor = curr_factor;
+  curr_factor = curr_factor - 1;
+  curr_cname = factors[curr_factor];
+  last_cname = factors[last_factor];
+
+  $('.' + curr_cname).css("display", "");
+  $('.' + last_cname).css("display", "none");
+});
+
+$("#nextfactor").click(function (e) {
+  if(curr_factor == 7) {
+    return;
+  }
+
+  last_factor = curr_factor;
+  curr_factor = curr_factor + 1;
+  curr_cname = factors[curr_factor];
+  last_cname = factors[last_factor];
+
+  $('.' + curr_cname).css("display", "");
+  $('.' + last_cname).css("display", "none");
+});
+
+
+
+
+$(".waterarea, .sleeparea, .exercisearea, .alcoholarea, .caffeinearea, .sugararea, .socialarea, .foodarea").click(function(event) {
+  index = id2factors.indexOf(event.target.id.slice(0,1));
+  new_quantity = parseInt(event.target.id.slice(-1));
+  if(new_quantity == quantities[index]) {
+    new_quantity = -1;
+  }
+  quantities[index] = new_quantity;
+  console.log(quantities[index]);
+  highlight_color = factor_colors[index];
+
+  for(i = 1; i <= 4; i++) {
+    $('#' + id2factors[index] + i.toString()).css("background", "#ffffff");
+  }
+  $('#' + id2factors[index] + quantities[index]).css("background", highlight_color);
+  //submit_factors();
+
+  water = quantities[0];
+  sleep = quantities[1];
+  exercise = quantities[2];
+  alcohol = quantities[3];
+  caffeine = quantities[4];
+  sugar = quantities[5];
+  social = quantities[6];
+  eat = quantities[7];
+
+  factors_to_post = {
+    "water": water,
+    "eat": eat,
+    "exercise": exercise,
+    "social": social,
+    "sleep": sleep,
+    "caffeine": caffeine,
+    "sugar": sugar,
+    "alcohol": alcohol
+  }
+
+  $.ajax({
+      type: "POST",
+      url: "{{url_for('pastMoods')}}",
+      data: JSON.stringify({ "moods" : {"mood1":mood1, "mood2":mood2}, "factors" : factors_to_post} ),
+      contentType: "application/json; charset=utf-8",
+      dataType: "json",
+      success: function (data) {
+        console.log("post first mood success");
+      }
+  });
+
+});
+
+function detectClick(event) {
+  if(moods.includes(event.target.id)) {
+    if(mood1 == "" || mood1_confirmed == false) {
+      mood1 = event.target.id;
+      $("#mood1").text("Feeling " + mood1 + "?");
+      $('#set_firstmood').css("background-color", mood_colors[moods.indexOf(mood1)]);
+      $('#set_firstmood').css("border-color", mood_colors[moods.indexOf(mood1)])
+
+    }
+    else if(mood2 == "" || mood2_confirmed == false) {
+      mood2 = event.target.id;
+      $("#mood2").text("Feeling " + mood2 + "?");
+      //$("#mood2").text("You were " + mood2 + " today")
+      $('#set_secondmood').css("background-color", mood_colors[moods.indexOf(mood2)]);
+      $('#set_secondmood').css("border-color", mood_colors[moods.indexOf(mood2)])
+    }
+  }
+console.log(event.target.id);
+  if(event.target.class == "watercontainer") {
+    console.log("sss");
+  }
+}
 </script>
 
 </html>

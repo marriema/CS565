@@ -3,6 +3,7 @@ import pymongo
 import json, re
 import datetime
 
+from mystat import get_topk_factors
 
 
 app = Flask(__name__)
@@ -39,7 +40,7 @@ def login():
 		if str(foundPassword) == password:
 			session['username'] = userName
 			return redirect(url_for('index'))
-		else:	
+		else:
 			return redirect(url_for('login'))
 
 
@@ -71,12 +72,12 @@ def logout():
 
 @app.route('/pastPeriods', methods=["GET", "POST"])
 def pastPeriods():
-	if request.method == 'GET':
-		#find last inserted period
-		last_period = periods.find_one(
+	#find last inserted period
+	last_period = periods.find_one(
   				{'username': session['username']},
   				sort=[( '_id', pymongo.DESCENDING )])
-				  
+
+	if request.method == 'GET':
 		if last_period is not None:
 			if last_period['end_date'] is None:
 				print last_period
@@ -85,7 +86,7 @@ def pastPeriods():
 		return jsonify(status='OK',lastPeriod='none')
 	else:
 		res = request.get_json()["action"]
-		if res == "start":
+		if res == "start":  #start a new period
 			d = datetime.date.today()
 			day = '%02d' % d.day
 			month = '%02d' % d.month
@@ -98,17 +99,87 @@ def pastPeriods():
 				"end_date":None
 			}
 			periods.insert_one(new_period)
-			return 'ok'
+			return jsonify(status='OK')
+		else:  #end current period
+			d = datetime.date.today()
+			day = '%02d' % d.day
+			month = '%02d' % d.month
+			year = '%02d' % d.year
+
+			complete_date = month+'/'+day+'/'+year
+			periods.update_one(
+				 {'_id': last_period['_id']},
+				{
+				'$set':
+				{
+					"end_date":complete_date
+				}}, upsert=False)
+			return jsonify(status='OK')
+
+	return jsonify(status='OK')
+
+
+
+@app.route('/moods', methods=["GET", "POST"])
+def pastMoods():
+	d = datetime.date.today()
+	day = '%02d' % d.day
+	month = '%02d' % d.month
+	year = '%02d' % d.year
+
+	complete_date = month+'/'+day+'/'+year
+
+	today = factors.find_one(
+  				{'username': session['username'],
+				 'date': complete_date})
+
+	if request.method == 'GET':  #get today's moods and factors
+		if today is not None:
+			print("today: ", today)
+			print("type of today: ", type(today))
+			today.pop('_id', None)
+			return jsonify(status='OK',today=today)
+		print("today is none");
+		return jsonify(status='OK',today='none')
+
+	else:  #post moods and factors
+		res = request.get_json()
+		factors_res = res["factors"]
+		moods_res = res["moods"]
+		if today is None:
+			new_record = {
+				"username": session['username'],
+				"date": complete_date,
+				"factors": factors_res,
+				"moods": moods_res
+			}
+			factors.insert_one(new_record)
 		else:
-			return 'ok'
+			factors.update_one(
+				 {'_id': today['_id']},
+				{
+				'$set':
+				{
+					"factors": factors_res,
+					"moods": moods_res
+				}}, upsert=False)
+		return jsonify(status='OK')
 
-	return 'ok'
 
 
+@app.route('/periodHistory')
+def periodHistory():
+	return render_template('periodHistory.html',username=session.get('username'))
 
-
-
-
+@app.route('/get_factors', methods=["GET"])
+def get_factors():
+	# Retrieve all the everyday moods, factors
+	data = factors.find({"username" : session["username"]});
+	data_list = list(data);
+	top_k = get_topk_factors(data_list)
+	return jsonify(status='OK', data = list(data));
+	# Pass the data to stat module
+	# Return top k factors and their scores as json string
 
 if __name__ == '__main__':
 	app.run(debug = True)
