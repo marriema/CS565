@@ -7,12 +7,22 @@
     <link rel="stylesheet" type="text/css" href="../static/css/custom.css">
     <link rel="stylesheet" type="text/css" href="../static/css/mood.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Quantico' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../static/css/rangeslide.css">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script type='text/javascript' src='../static/js/mood.js'></script>
+    <script type='text/javascript' src='../static/js/rangeslide.js'></script>
+
 </head>
 <body onclick="detectClick(event)">
 
+<style>
+
+
+
+</style>
 <div class="grid-container">
 
     <div class="header">
@@ -396,6 +406,89 @@
       </div>
     </div>
 
+    <div class="additional" style="width:25rem">
+      <div class="card" style="width: 100%;position:relative;margin-top:16%;">
+        <div class="insight" style="display:flex; flex-direction: column; justify-content:center;">
+          <h2 style="padding-left:5%; margin-top:5%">
+            Insight
+          </h2>
+          <div class="positive" style="padding-left:5%">
+
+
+          </div>
+
+          <div class="negative" style="padding-left:5%">
+
+
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card" style="width: 100%;position:relative;margin-top:16%;">
+        <h2 style="padding-left:5%; margin-top:5%">
+          Calculator
+        </h2>
+        <div class="range-slider" style="margin-top: 10px;">
+          <span style="margin-left:10px;margin-right:20px;"> water </span>
+          <input class="range-slider__range" style="width:40%;background:#74b9ff; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <span id="range_slider_value_water" class="range-slider__value" style="background:#74b9ff;">0</span>
+        </div>
+
+        <div class="range-slider" style="margin-top: 10px;">
+          <span style="margin-left:10px;margin-right:20px;"> sleep </span>
+          <input class="range-slider__range" style="width:40%;background:#d5b8ff; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <span id="range_slider_value_sleep" class="range-slider__value" style="background:#d5b8ff;">0</span>
+        </div>
+
+        <div class="range-slider" style="margin-top: 10px;">
+          <span style="margin-left:10px;margin-right:0px;"> exercise </span>
+          <input class="range-slider__range" style="width:40%;background:#fcd670; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <span id="range_slider_value_exercise" class="range-slider__value" style="background:#fcd670;">0</span>
+        </div>
+
+        <div class="range-slider" style="margin-top: 10px;">
+          <span style="margin-left:10px;margin-right:10px;"> alcohol </span>
+          <input class="range-slider__range" style="width:40%;background:#fcd670; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <span id="range_slider_value_alcohol" class="range-slider__value" style="background:#fcd670;">0</span>
+        </div>
+
+        <div class="range-slider" style="margin-top: 10px;">
+          <span style="margin-left:10px;margin-right:5px;"> caffeine </span>
+          <input class="range-slider__range" style="width:40%;background:#d91e18; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <span id="range_slider_value_caffeine" class="range-slider__value" style="background:#d91e18;">0</span>
+        </div>
+
+        <div class="range-slider" style="margin-top: 10px;">
+          <span style="margin-left:10px;margin-right:20px;"> sugar </span>
+          <input class="range-slider__range" style="width:40%;background:#d2527f; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <span id="range_slider_value_sugar" class="range-slider__value" style="background:#d2527f;">0</span>
+        </div>
+
+        <div class="range-slider" style="margin-top: 10px;">
+          <span style="margin-left:10px;margin-right:20px;"> social </span>
+          <input class="range-slider__range" style="width:40%;background:#95a5a6; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <span id="range_slider_value_social" class="range-slider__value" style="background:#95a5a6;">0</span>
+        </div>
+
+        <div class="range-slider" style="margin-top: 10px;">
+          <span style="margin-left:10px;margin-right:40px;"> eat </span>
+          <input class="range-slider__range" style="width:40%;background:#f9b42d; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <span id="range_slider_value_food" class="range-slider__value" style="background:#f9b42d">0</span>
+        </div>
+
+        <hr>
+
+        <div class="range-slider" style="margin-top: 10px;margin-bottom:10px;">
+          <span style="margin-left:10px;margin-right:20px;"> mood </span>
+          <input class="range-slider__range" style="width:40%; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <span id="range_slider_value_mood" class="range-slider__value">0</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 </body>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
@@ -403,11 +496,11 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 <script>
-    n =  new Date();
-    y = n.getFullYear();
-    m = n.getMonth() + 1;
-    d = n.getDate();
-    document.getElementById("date").innerHTML = m + " / " + d + " / " + y;
+n =  new Date();
+y = n.getFullYear();
+m = n.getMonth() + 1;
+d = n.getDate();
+document.getElementById("date").innerHTML = m + " / " + d + " / " + y;
 quantities = [-1,-1,-1,-1,-1,-1,-1,-1];
 id2factors = ["w", "s", "e", "a", "c", "u", "o", "f"]
 factors = ["water", "sleep","exercise","alcohol","caffeine","sugar","social","eat"]
@@ -429,7 +522,7 @@ d = n.getDate();
 document.getElementById("date").innerHTML = m + " / " + d + " / " + y;
 
 
-    
+
 
 $(document).ready(function(){
 
@@ -472,12 +565,12 @@ $(document).ready(function(){
             else
             {
                 if(response.today.moods.mood1 != null && response.today.moods.mood2 == null) {
-                  $("#mood1").text("You were " + response.today.moods.mood1 + " today")
+                  $("#mood1").text("You were " + moods[response.today.moods.mood1] + " today")
                   $("#mood2").text("Do you feel xxx now?")
                 }
                 if(response.today.moods.mood1 != null && response.today.moods.mood2 != null) {
-                  $("#mood1").text("You were " + response.today.moods.mood1 + " today")
-                  $("#mood2").text("You were " + response.today.moods.mood2 + " today")
+                  $("#mood1").text("You were " + moods[response.today.moods.mood1] + " today")
+                  $("#mood2").text("You were " + moods[response.today.moods.mood2] + " today")
                 }
             }
         },
@@ -485,6 +578,59 @@ $(document).ready(function(){
                 console.log(error);
         }
     });
+
+    $.ajax({
+        url: "{{url_for('get_factors')}}",
+        type: 'GET',
+        dataType: 'json',
+        contentType: 'application/json; charset=utf-8',
+        success: function(response){
+            console.log(response);
+            negative = response.data.negative
+            positive = response.data.positive
+
+            for(i = 0; i < positive.length; i++) {
+              pos_item_name = positive[i].name
+              pos_item_score = positive[i].score
+              pos_item_score = pos_item_score.toFixed(2);
+              htmlcode = `<p>${pos_item_name} is positively(${pos_item_score}) correlated with mood</p>`
+              $( ".positive" ).append( htmlcode );
+            }
+
+            for(i = 0; i < negative.length; i++) {
+              neg_item_name = negative[i].name
+              neg_item_score = negative[i].score
+              neg_item_score = neg_item_score.toFixed(2);
+              htmlcode = `<p>${neg_item_name} is negatively(${neg_item_score}) correlated with mood</p>`
+              $( ".negative" ).append( htmlcode );
+            }
+
+            /*
+            $( ".positive" ).append( "<p>Test</p>" );
+
+            if(response.today == 'none' || (response.today.moods.mood1 == null && response.today.moods.mood2 == null))
+            {
+                // Don't do anything
+                // $("#mood1").text("hello world")
+            }
+            else
+            {
+                if(response.today.moods.mood1 != null && response.today.moods.mood2 == null) {
+                  $("#mood1").text("You were " + moods[response.today.moods.mood1] + " today")
+                  $("#mood2").text("Do you feel xxx now?")
+                }
+                if(response.today.moods.mood1 != null && response.today.moods.mood2 != null) {
+                  $("#mood1").text("You were " + moods[response.today.moods.mood1] + " today")
+                  $("#mood2").text("You were " + moods[response.today.moods.mood2] + " today")
+                }
+            }
+            */
+        },
+        error: function(error){
+                console.log(error);
+        }
+    });
+
 });
 
 
@@ -540,27 +686,27 @@ $(document).ready(function(){
     type: 'line',
     data: {
     labels: [1500,1600,1700,1750,1800,1850,1900,1950,1999,2050],
-    datasets: [{ 
+    datasets: [{
         data: [86,114,106,106,107,111,133,221,783,2478],
         label: "Africa",
         borderColor: "#3e95cd",
         fill: false
-      }, { 
+      }, {
         data: [282,350,411,502,635,809,947,1402,3700,5267],
         label: "Asia",
         borderColor: "#8e5ea2",
         fill: false
-      }, { 
+      }, {
         data: [168,170,178,190,203,276,408,547,675,734],
         label: "Europe",
         borderColor: "#3cba9f",
         fill: false
-      }, { 
+      }, {
         data: [40,20,10,16,24,38,74,167,508,784],
         label: "Latin America",
         borderColor: "#e8c3b9",
         fill: false
-      }, { 
+      }, {
         data: [6,3,2,2,7,26,82,172,312,433],
         label: "North America",
         borderColor: "#c45850",
@@ -605,7 +751,7 @@ $("#set_secondmood").click(function (e) {
   $.ajax({
       type: "POST",
       url: "{{url_for('pastMoods')}}",
-      data: JSON.stringify({ "moods" : {"mood1":mood1, "mood2":mood2}, "factors" : {}} ),
+      data: JSON.stringify({ "moods" : {"mood1":moods.indexOf(mood1), "mood2":moods.indexOf(mood2)}, "factors" : {}} ),
       contentType: "application/json; charset=utf-8",
       dataType: "json",
       success: function (data) {
