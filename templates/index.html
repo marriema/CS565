@@ -7,12 +7,22 @@
     <link rel="stylesheet" type="text/css" href="../static/css/custom.css">
     <link rel="stylesheet" type="text/css" href="../static/css/mood.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href='https://fonts.googleapis.com/css?family=Quantico' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="../static/css/rangeslide.css">
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
     <script type='text/javascript' src='../static/js/mood.js'></script>
+    <script type='text/javascript' src='../static/js/rangeslide.js'></script>
+
 </head>
 <body onclick="detectClick(event)">
 
+<style>
+
+
+
+</style>
 <div class="grid-container">
 
     <div class="header">
@@ -97,10 +107,6 @@
         </select>
         <br>
         <canvas id="line-chart" style="height: 500px; width: 600px;"></canvas>
-    </div>
-
-    <div class="additional">
-        <img width="200px" height="400px"src="../static/images/lavendar.jpeg">
     </div>
 
     <div class="factor" style="width:25rem">
@@ -384,6 +390,89 @@
       </div>
     </div>
 
+    <div class="additional" style="width:25rem">
+      <div class="card" style="width: 100%;position:relative;margin-top:16%;">
+        <div class="insight" style="display:flex; flex-direction: column; justify-content:center;">
+          <h2 style="padding-left:5%; margin-top:5%">
+            Insight
+          </h2>
+          <div class="positive" style="padding-left:5%">
+
+
+          </div>
+
+          <div class="negative" style="padding-left:5%">
+
+
+          </div>
+
+        </div>
+      </div>
+
+      <div class="card" style="width: 100%;position:relative;margin-top:16%;">
+        <h2 style="padding-left:5%; margin-top:5%">
+          Calculator
+        </h2>
+        <div class="range-slider" style="margin-top: 10px;">
+          <span style="margin-left:10px;margin-right:20px;"> water </span>
+          <input class="range-slider__range" style="width:40%;background:#74b9ff; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <span id="range_slider_value_water" class="range-slider__value" style="background:#74b9ff;">0</span>
+        </div>
+
+        <div class="range-slider" style="margin-top: 10px;">
+          <span style="margin-left:10px;margin-right:20px;"> sleep </span>
+          <input class="range-slider__range" style="width:40%;background:#d5b8ff; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <span id="range_slider_value_sleep" class="range-slider__value" style="background:#d5b8ff;">0</span>
+        </div>
+
+        <div class="range-slider" style="margin-top: 10px;">
+          <span style="margin-left:10px;margin-right:0px;"> exercise </span>
+          <input class="range-slider__range" style="width:40%;background:#fcd670; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <span id="range_slider_value_exercise" class="range-slider__value" style="background:#fcd670;">0</span>
+        </div>
+
+        <div class="range-slider" style="margin-top: 10px;">
+          <span style="margin-left:10px;margin-right:10px;"> alcohol </span>
+          <input class="range-slider__range" style="width:40%;background:#fcd670; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <span id="range_slider_value_alcohol" class="range-slider__value" style="background:#fcd670;">0</span>
+        </div>
+
+        <div class="range-slider" style="margin-top: 10px;">
+          <span style="margin-left:10px;margin-right:5px;"> caffeine </span>
+          <input class="range-slider__range" style="width:40%;background:#d91e18; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <span id="range_slider_value_caffeine" class="range-slider__value" style="background:#d91e18;">0</span>
+        </div>
+
+        <div class="range-slider" style="margin-top: 10px;">
+          <span style="margin-left:10px;margin-right:20px;"> sugar </span>
+          <input class="range-slider__range" style="width:40%;background:#d2527f; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <span id="range_slider_value_sugar" class="range-slider__value" style="background:#d2527f;">0</span>
+        </div>
+
+        <div class="range-slider" style="margin-top: 10px;">
+          <span style="margin-left:10px;margin-right:20px;"> social </span>
+          <input class="range-slider__range" style="width:40%;background:#95a5a6; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <span id="range_slider_value_social" class="range-slider__value" style="background:#95a5a6;">0</span>
+        </div>
+
+        <div class="range-slider" style="margin-top: 10px;">
+          <span style="margin-left:10px;margin-right:40px;"> eat </span>
+          <input class="range-slider__range" style="width:40%;background:#f9b42d; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <span id="range_slider_value_food" class="range-slider__value" style="background:#f9b42d">0</span>
+        </div>
+
+        <hr>
+
+        <div class="range-slider" style="margin-top: 10px;margin-bottom:10px;">
+          <span style="margin-left:10px;margin-right:20px;"> mood </span>
+          <input class="range-slider__range" style="width:40%; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <span id="range_slider_value_mood" class="range-slider__value">0</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 </body>
 <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
 
@@ -412,7 +501,7 @@
     document.getElementById("date").innerHTML = m + " / " + d + " / " + y;
 
 
-    
+
 
 $(document).ready(function(){
 
@@ -455,12 +544,12 @@ $(document).ready(function(){
             else
             {
                 if(response.today.moods.mood1 != null && response.today.moods.mood2 == null) {
-                  $("#mood1").text("You were " + response.today.moods.mood1 + " today")
+                  $("#mood1").text("You were " + moods[response.today.moods.mood1] + " today")
                   $("#mood2").text("Do you feel xxx now?")
                 }
                 if(response.today.moods.mood1 != null && response.today.moods.mood2 != null) {
-                  $("#mood1").text("You were " + response.today.moods.mood1 + " today")
-                  $("#mood2").text("You were " + response.today.moods.mood2 + " today")
+                  $("#mood1").text("You were " + moods[response.today.moods.mood1] + " today")
+                  $("#mood2").text("You were " + moods[response.today.moods.mood2] + " today")
                 }
             }
         },
@@ -597,7 +686,7 @@ $("#set_secondmood").click(function (e) {
   $.ajax({
       type: "POST",
       url: "{{url_for('pastMoods')}}",
-      data: JSON.stringify({ "moods" : {"mood1":mood1, "mood2":mood2}, "factors" : {}} ),
+      data: JSON.stringify({ "moods" : {"mood1":moods.indexOf(mood1), "mood2":moods.indexOf(mood2)}, "factors" : {}} ),
       contentType: "application/json; charset=utf-8",
       dataType: "json",
       success: function (data) {
