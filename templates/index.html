@@ -386,7 +386,7 @@
 
         <button id="nextfactor" type="button" style="outline:none;" class="btn btn-primary btn-sm active"> Next </button>
 
-      
+
       </div>
     </div>
 
@@ -458,14 +458,14 @@
         <div class="range-slider" style="margin-top: 10px;">
           <span style="margin-left:10px;margin-right:40px;"> eat </span>
           <input class="range-slider__range" style="width:40%;background:#f9b42d; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
-          <span id="range_slider_value_food" class="range-slider__value" style="background:#f9b42d">0</span>
+          <span id="range_slider_value_eat" class="range-slider__value" style="background:#f9b42d">0</span>
         </div>
 
         <hr>
 
         <div class="range-slider" style="margin-top: 10px;margin-bottom:10px;">
           <span style="margin-left:10px;margin-right:20px;"> mood </span>
-          <input class="range-slider__range" style="width:40%; margin-left:20px;" type="range" value="0" min="0" max="3" step="1">
+          <input class="range-slider__range" disabled = true style="width:40%; margin-left:20px;" type="range" value="0" min="0" max="6" step="1">
           <span id="range_slider_value_mood" class="range-slider__value">0</span>
         </div>
 
@@ -504,6 +504,36 @@
 
 
 $(document).ready(function(){
+
+
+  $.ajax({
+         url: "{{url_for('get_factors')}}",
+         type: 'GET',
+         dataType: 'json',
+         contentType: 'application/json; charset=utf-8',
+         success: function(response){
+             console.log(response);
+             negative = response.data.negative
+             positive = response.data.positive
+             for(i = 0; i < positive.length; i++) {
+               pos_item_name = positive[i].name
+               pos_item_score = positive[i].score
+               pos_item_score = pos_item_score.toFixed(2);
+               htmlcode = `<p>${pos_item_name} is positively(${pos_item_score}) correlated with mood</p>`
+               $( ".positive" ).append( htmlcode );
+             }
+             for(i = 0; i < negative.length; i++) {
+               neg_item_name = negative[i].name
+               neg_item_score = negative[i].score
+               neg_item_score = neg_item_score.toFixed(2);
+               htmlcode = `<p>${neg_item_name} is negatively(${neg_item_score}) correlated with mood</p>`
+               $( ".negative" ).append( htmlcode );
+             }
+         },
+         error: function(error){
+                 console.log(error);
+         }
+     });
 
     $.ajax({
         url: "{{url_for('pastPeriods')}}",
@@ -557,8 +587,9 @@ $(document).ready(function(){
                 console.log(error);
         }
     });
-   
+
 });
+
 
 
 $("#start").click(function (e) {
@@ -619,7 +650,7 @@ $( ".dropdown" ).change(function() {
     var end_date = null;
     if(split.length == 2)
         end_date = split[1];
-    
+
         $.ajax({
             type: "POST",
             url: "{{url_for('getPastFactors')}}",
@@ -630,7 +661,7 @@ $( ".dropdown" ).change(function() {
                 labels = []
                 var mood = [], eat=[] , water=[], sleep=[], exercise=[], social=[], alcohol=[], caffeine=[], sugar=[];
                 console.log(response)
-        
+
 
                 $.each(response.history, function(i, data) {
                     labels.push(data["date"])
@@ -646,14 +677,14 @@ $( ".dropdown" ).change(function() {
                 });
 
                 drawGraph(labels,[mood,eat,water,sleep,social,exercise,alcohol,sugar,caffeine])
-                
+
             },
             error: function(error){
                 console.log(error);
             }
-                
+
         });
-    
+
 });
 
 
@@ -805,51 +836,51 @@ var chart = new Chart(document.getElementById("line-chart"), {
     type: 'line',
     data: {
     labels: [],
-    datasets: [{ 
+    datasets: [{
         data: [],
         label: "mood",
         borderColor: "#3e95cd",
         fill: false
-      }, { 
+      }, {
         data: [],
         label: "eat",
         borderColor: "#8e5ea2",
         fill: false
-      }, { 
+      }, {
         data: [],
         label: "water",
         borderColor: "#3cba9f",
         fill: false
-      }, { 
+      }, {
         data: [],
         label: "sleep",
         borderColor: "#e8c3b9",
         fill: false
-      }, { 
+      }, {
         data: [],
         label: "social",
         borderColor: "#c45850",
         fill: false
       },
-      { 
+      {
         data: [],
         label: "exercise",
         borderColor: "#f4f776",
         fill: false
       },
-      { 
+      {
         data: [],
         label: "alcohol",
         borderColor: "#67809f",
         fill: false
       },
-      { 
+      {
         data: [],
         label: "sugar",
         borderColor: "#000",
         fill: false
       },
-      { 
+      {
         data: [],
         label: "caffeine",
         borderColor: "#df5286",
@@ -858,7 +889,7 @@ var chart = new Chart(document.getElementById("line-chart"), {
     ]
   },
     options: {
-        title: 
+        title:
         {
             display: true,
             text: 'Your Environmental factors VS mood'
@@ -867,7 +898,57 @@ var chart = new Chart(document.getElementById("line-chart"), {
         maintainAspectRatio: true
 }});
 
+$('.range-slider__range').on('change', function (e) {
+    $(this).next().text($(this)[0].value);
+    calculate_mood_score();
 
+});
+
+function calculate_mood_score() {
+  $.ajax({
+         url: "{{url_for('get_all_factors')}}",
+         type: 'GET',
+         dataType: 'json',
+         contentType: 'application/json; charset=utf-8',
+         success: function(response){
+             console.log(response);
+             var sum = 0;
+             normalized_scores = {};
+             arr = response.data
+             for(i = 0; i < arr.length; i++) {
+               sum = sum + Math.abs(arr[i].score);
+             }
+             for(i = 0; i < arr.length; i++) {
+               normalized_scores[arr[i].name] = arr[i].score / sum;
+             }
+             weighted_sum = 0;
+             for(i = 0; i < arr.length; i++) {
+               val = parseInt($('#range_slider_value_' + arr[i].name).text());
+               if(Number.isNaN(val)) {
+                 console.log(arr[i].name + " has nan value -->" + $('#range_slider_value_' + arr[i].name).text());
+                 continue;
+               }
+               weighted_sum = weighted_sum + normalized_scores[arr[i].name] * val
+               //console.log(val);
+             }
+             //weighted_sum = weighted_sum / 2 + 0.5;
+             weighted_sum = Math.round(weighted_sum * 6);
+             weighted_sum = Math.min(weighted_sum, 6);
+             weighted_sum = Math.max(weighted_sum, 0);
+             weighted_sum = 6 - weighted_sum;
+             console.log('weighted_sum')
+             console.log(weighted_sum)
+
+             $('#range_slider_value_mood').text(weighted_sum.toString());
+             $('#range_slider_value_mood').prev().val(weighted_sum);
+         },
+         error: function(error){
+             console.log(error);
+         }
+     });
+}
+
+calculate_mood_score();
 
 function drawGraph(labels=[], datasets=[])
 {

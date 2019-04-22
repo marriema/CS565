@@ -6,7 +6,7 @@ from datetime import date
 
 
 from mystat import get_topk_factors
-
+from mystat import get_all_factors_score
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -29,7 +29,7 @@ def index():
 		pp = []
 		for each in ret:
 			pp.append([each[0], each[1]])
-		
+
 		return render_template('index.html', username=session.get('username'), pp=pp, not_finished_period=not_finished_period)
 
 
@@ -176,7 +176,7 @@ def periodHistory():
 
 @app.route('/getPastPeriods')
 def getPastPeriods(local=False):
-	
+
 	history = periods.find({'username': session['username']},sort=[( '_id', pymongo.ASCENDING )])
 	history = list(history)
 	ret = []
@@ -242,7 +242,7 @@ def getPastFactors():
 				mood_avg = 0
 			else:
 				mood_avg = float(sum(mood_avg)/len(mood_avg))
-			
+
 			t = each["factors"]
 			for key,value in t.iteritems():
 				t[key] = int(value)
@@ -254,7 +254,7 @@ def getPastFactors():
 				'moods': mood_avg,
 				'factors': t
 			})
-	
+
 	return jsonify(status='OK', history=ret)
 
 
@@ -308,6 +308,14 @@ def get_factors():
 	return jsonify(status='OK', data = top_k)
 	# Pass the data to stat module
 	# Return top k factors and their scores as json string
+
+@app.route('/get_all_factors', methods=["GET"])
+def get_all_factors():
+	# Retrieve all the everyday moods, factors
+	data = factors.find({"username" : session["username"]})
+	data_list = list(data)
+	all = get_all_factors_score(data_list)
+	return jsonify(status='OK', data = all)
 
 if __name__ == '__main__':
 	app.run(debug = True)
