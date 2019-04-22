@@ -83,16 +83,32 @@
     </div>
 
     <div class="visual">
-        <canvas id="line-chart" width="500px" height="450px"></canvas>
+        <select class="dropdown" id="dd">
+                <option value="" selected="selected">Select a past period</option>
+                {% for each in pp %}
+                    <option value="{{ each|join('-') }}">{{ each|join(" - ") }}</option>
+                {% endfor %}
 
+                {% if not_finished_period %}
+                    {% set value = not_finished_period + " - " + "current" %}
+
+                    <option value="{{ not_finished_period }}">{{ value }}</option>
+                {% endif %}
+        </select>
+        <br>
+        <canvas id="line-chart" style="height: 500px; width: 600px;"></canvas>
+    </div>
+
+    <div class="additional">
+        <img width="200px" height="400px"src="../static/images/lavendar.jpeg">
     </div>
 
     <div class="factor" style="width:25rem">
       <div class="card" style="width: 100%;position:relative;">
-        <button id="prevfactor" type="button" style="" class="btn btn-primary btn-sm active"> Prev </button>
+        <button id="prevfactor" type="button" class="btn btn-primary btn-sm active"> Prev </button>
 
 
-        <div class="water" style="">
+        <div class="water">
           <div>
             <div id="w1" class="watercontainer waterarea">
               <div>
@@ -364,35 +380,7 @@
 
         <button id="nextfactor" type="button" style="outline:none;" class="btn btn-primary btn-sm active"> Next </button>
 
-        <!--
-        <ul style="list-style-type:none">
-          <li>
-            water <input type="text" id="water">
-          </li>
-          <li>
-            eat <input type="text" id="eat">
-          </li>
-          <li>
-            exercise <input type="text" id="exercise">
-          </li>
-          <li>
-            sleep <input type="text" id="sleep">
-          </li>
-          <li>
-            social <input type="text" id="social">
-          </li>
-          <li>
-            Caffeine <input type="text" id="caffeine">
-          </li>
-          <li>
-            Alcohol <input type="text" id="alcohol">
-          </li>
-          <li>
-            Sugar <input type="text" id="sugar">
-          </li>
-        </ul>
-        <button id="submit_factors" type="button" style="" class="btn btn-primary active">submit</button>
-      -->
+      
       </div>
     </div>
 
@@ -403,30 +391,25 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
 <script>
+    quantities = [-1,-1,-1,-1,-1,-1,-1,-1];
+    id2factors = ["w", "s", "e", "a", "c", "u", "o", "f"]
+    factors = ["water", "sleep","exercise","alcohol","caffeine","sugar","social","eat"]
+    moods = ["frisky", "happy", "fine", "ok", "upset", "sad", "depressed"]
+    mood_colors = ["#7befb2","#f27935","#800080","#67809f", "#d91e18", "#f4f776","#6bb9f0"]
+    factor_colors = ["#74b9ff","#d5b8ff","#fcd670","#fcd670","#d91e18","#d2527f","#95a5a6","#f9b42d"];
+
+    mood1 = "";
+    mood1_confirmed = false;
+    mood2 = "";
+    mood2_confirmed = false;
+
+    curr_factor = 0;
+
     n =  new Date();
     y = n.getFullYear();
     m = n.getMonth() + 1;
     d = n.getDate();
     document.getElementById("date").innerHTML = m + " / " + d + " / " + y;
-quantities = [-1,-1,-1,-1,-1,-1,-1,-1];
-id2factors = ["w", "s", "e", "a", "c", "u", "o", "f"]
-factors = ["water", "sleep","exercise","alcohol","caffeine","sugar","social","eat"]
-moods = ["frisky", "happy", "fine", "ok", "upset", "sad", "depressed"]
-mood_colors = ["#7befb2","#f27935","#800080","#67809f", "#d91e18", "#f4f776","#6bb9f0"]
-factor_colors = ["#74b9ff","#d5b8ff","#fcd670","#fcd670","#d91e18","#d2527f","#95a5a6","#f9b42d"];
-
-mood1 = "";
-mood1_confirmed = false;
-mood2 = "";
-mood2_confirmed = false;
-
-curr_factor = 0;
-
-n =  new Date();
-y = n.getFullYear();
-m = n.getMonth() + 1;
-d = n.getDate();
-document.getElementById("date").innerHTML = m + " / " + d + " / " + y;
 
 
     
@@ -485,96 +468,105 @@ $(document).ready(function(){
                 console.log(error);
         }
     });
+   
 });
 
 
-    $("#start").click(function (e) {
-    if($(this).prop("checked") == true)
-    {
+$("#start").click(function (e) {
+if($(this).prop("checked") == true)
+{
+    $.ajax({
+    type: "POST",
+    url: "{{url_for('pastPeriods')}}",
+    data: JSON.stringify({ "action" : "start" } ),
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    success: function (data) {
         $.ajax({
-        type: "POST",
-        url: "{{url_for('pastPeriods')}}",
-        data: JSON.stringify({ "action" : "start" } ),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (data) {
-            $.ajax({
-                url: "{{url_for('pastPeriods')}}",
-                type: 'GET',
-                dataType: 'json',
-                contentType: 'application/json; charset=utf-8',
-                success: function(response){
-                        $("#pastPeriods").text("It seems that your current cycle started on " + response.lastPeriod + "\n" +"Does it end?")
-                        $("#endToggle").show()
-                        $("#startToggle").hide()
-                    },
-                error: function(error){
-                    console.log(error);
-                }
-            });
+            url: "{{url_for('pastPeriods')}}",
+            type: 'GET',
+            dataType: 'json',
+            contentType: 'application/json; charset=utf-8',
+            success: function(response){
+                    $("#pastPeriods").text("It seems that your current cycle started on " + response.lastPeriod + "\n" +"Does it end?")
+                    $("#endToggle").show()
+                    $("#startToggle").hide()
+                },
+            error: function(error){
+                console.log(error);
             }
         });
-    }
-    });
-
-    $("#end").click(function (e) {
-
-    if($(this).prop("checked") == true)
-    {
-        $.ajax({
-        type: "POST",
-        url: "{{url_for('pastPeriods')}}",
-        data: JSON.stringify({ "action" : "end" } ),
-        contentType: "application/json; charset=utf-8",
-        dataType: "json",
-        success: function (data) {
-            $("#pastPeriods").text("Shark week starts? Record it here")
-            $("#endToggle").hide()
-            $("#startToggle").show()
         }
-        });
+    });
+}
+});
+
+$("#end").click(function (e) {
+
+if($(this).prop("checked") == true)
+{
+    $.ajax({
+    type: "POST",
+    url: "{{url_for('pastPeriods')}}",
+    data: JSON.stringify({ "action" : "end" } ),
+    contentType: "application/json; charset=utf-8",
+    dataType: "json",
+    success: function (data) {
+        $("#pastPeriods").text("Shark week starts? Record it here")
+        $("#endToggle").hide()
+        $("#startToggle").show()
     }
     });
-
-    var linegraph = new Chart(document.getElementById("line-chart"), {
-    type: 'line',
-    data: {
-    labels: [1500,1600,1700,1750,1800,1850,1900,1950,1999,2050],
-    datasets: [{ 
-        data: [86,114,106,106,107,111,133,221,783,2478],
-        label: "Africa",
-        borderColor: "#3e95cd",
-        fill: false
-      }, { 
-        data: [282,350,411,502,635,809,947,1402,3700,5267],
-        label: "Asia",
-        borderColor: "#8e5ea2",
-        fill: false
-      }, { 
-        data: [168,170,178,190,203,276,408,547,675,734],
-        label: "Europe",
-        borderColor: "#3cba9f",
-        fill: false
-      }, { 
-        data: [40,20,10,16,24,38,74,167,508,784],
-        label: "Latin America",
-        borderColor: "#e8c3b9",
-        fill: false
-      }, { 
-        data: [6,3,2,2,7,26,82,172,312,433],
-        label: "North America",
-        borderColor: "#c45850",
-        fill: false
-      }
-    ]
-  },
-  options: {
-    title: {
-      display: true,
-      text: 'Your Environmental factors VS mood'
-    }
-  }
+}
 });
+
+$( ".dropdown" ).change(function() {
+    var selected = $("#dd :selected").val();
+    if (selected == "")
+        return false;
+
+    var split = selected.split("-");
+    var start_date = split[0];
+    var end_date = null;
+    if(split.length == 2)
+        end_date = split[1];
+    
+        $.ajax({
+            type: "POST",
+            url: "{{url_for('getPastFactors')}}",
+            data: JSON.stringify({ "start_date" : start_date, "end_date" : end_date }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (response) {
+                labels = []
+                var mood = [], eat=[] , water=[], sleep=[], exercise=[], social=[], alcohol=[], caffeine=[], sugar=[];
+                console.log(response)
+        
+
+                $.each(response.history, function(i, data) {
+                    labels.push(data["date"])
+                    mood.push(data["moods"])
+                    eat.push(data["factors"]["eat"])
+                    water.push(data["factors"]["water"])
+                    sleep.push(data["factors"]["sleep"])
+                    social.push(data["factors"]["social"])
+                    exercise.push(data["factors"]["exercise"])
+                    alcohol.push(data["factors"]["alcohol"])
+                    sugar.push(data["factors"]["sugar"])
+                    caffeine.push(data["factors"]["caffeine"])
+                });
+
+                drawGraph(labels,[mood,eat,water,sleep,social,exercise,alcohol,sugar,caffeine])
+                
+            },
+            error: function(error){
+                console.log(error);
+            }
+                
+        });
+    
+});
+
 
 $("#set_firstmood").click(function (e) {
     mood1 = mood1 || "frisky";
@@ -718,6 +710,84 @@ console.log(event.target.id);
   if(event.target.class == "watercontainer") {
     console.log("sss");
   }
+}
+
+var chart = new Chart(document.getElementById("line-chart"), {
+    type: 'line',
+    data: {
+    labels: [],
+    datasets: [{ 
+        data: [],
+        label: "mood",
+        borderColor: "#3e95cd",
+        fill: false
+      }, { 
+        data: [],
+        label: "eat",
+        borderColor: "#8e5ea2",
+        fill: false
+      }, { 
+        data: [],
+        label: "water",
+        borderColor: "#3cba9f",
+        fill: false
+      }, { 
+        data: [],
+        label: "sleep",
+        borderColor: "#e8c3b9",
+        fill: false
+      }, { 
+        data: [],
+        label: "social",
+        borderColor: "#c45850",
+        fill: false
+      },
+      { 
+        data: [],
+        label: "exercise",
+        borderColor: "#f4f776",
+        fill: false
+      },
+      { 
+        data: [],
+        label: "alcohol",
+        borderColor: "#67809f",
+        fill: false
+      },
+      { 
+        data: [],
+        label: "sugar",
+        borderColor: "#000",
+        fill: false
+      },
+      { 
+        data: [],
+        label: "caffeine",
+        borderColor: "#df5286",
+        fill: false
+      },
+    ]
+  },
+    options: {
+        title: 
+        {
+            display: true,
+            text: 'Your Environmental factors VS mood'
+        },
+        responsive:false,
+        maintainAspectRatio: true
+}});
+
+
+
+function drawGraph(labels=[], datasets=[])
+{
+    chart.data.labels = labels;
+
+    chart.data.datasets.forEach((dataset, i)=> {
+        dataset.data = datasets[i];
+    });
+    chart.update();
 }
 </script>
 

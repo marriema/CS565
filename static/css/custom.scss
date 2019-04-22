@@ -148,6 +148,20 @@
 }
 
 
+.visual {
+  position: relative;
+  .dropdown {
+    position: absolute;
+    top: 10px;
+  }
+
+  canvas {
+    position: absolute;
+    top: 50px;
+  }
+}
+
+
 .period-container {
     background-color: #fef8f3;
 

@@ -25,7 +25,12 @@ def index():
 	if not session.get('username'): #user not logged in
 		return redirect(url_for('login'))
 	else:
-		return render_template('index.html', username=session.get('username'))
+		ret, not_finished_period = getPastPeriods(True)
+		pp = []
+		for each in ret:
+			pp.append([each[0], each[1]])
+		
+		return render_template('index.html', username=session.get('username'), pp=pp, not_finished_period=not_finished_period)
 
 
 @app.route('/login', methods=["GET", "POST"])
@@ -81,7 +86,6 @@ def pastPeriods():
 	if request.method == 'GET':
 		if last_period is not None:
 			if last_period['end_date'] is None:
-				print last_period
 				return jsonify(status='OK',lastPeriod=str(last_period['start_date']))
 
 		return jsonify(status='OK',lastPeriod='none')
@@ -137,7 +141,6 @@ def pastMoods():
 	if request.method == 'GET':  #get today's moods and factors
 		if today is not None:
 			today['_id'] = ""
-			print today
 			return jsonify(status='OK',today=today)
 		return jsonify(status='OK',today='none')
 
@@ -172,7 +175,8 @@ def periodHistory():
 
 
 @app.route('/getPastPeriods')
-def getPastPeriods():
+def getPastPeriods(local=False):
+	
 	history = periods.find({'username': session['username']},sort=[( '_id', pymongo.ASCENDING )])
 	history = list(history)
 	ret = []
@@ -203,14 +207,60 @@ def getPastPeriods():
 		else: #current not_finished period
 			not_finished_period = each["start_date"]
 
-	print ret
-	return jsonify(status='OK', history=ret, not_finished_period=not_finished_period)
+	if local is False:
+		return jsonify(status='OK', history=ret, not_finished_period=not_finished_period)
+	else:
+		return (ret, not_finished_period)
 
 
-
-@app.route('/getPastFactors')
+@app.route('/getPastFactors', methods=["POST"])
 def getPastFactors():
-	pass
+	res = request.get_json()
+
+	start_split = res["start_date"].split('/')
+	d0 = date(int(start_split[2]), int(start_split[0]), int(start_split[1]))
+	d1 = None
+
+	if res["end_date"] is not None:
+		end_split = res["end_date"].split('/')
+		d1 = date(int(end_split[2]), int(end_split[0]), int(end_split[1]))
+
+	ret = []
+	history = factors.find({'username': session['username']},sort=[( '_id', pymongo.ASCENDING )]) #find all factors of this person
+	history = list(history)
+	for i, each in enumerate(history):
+		current_date = each["date"].split('/')
+		current_date = date(int(current_date[2]), int(current_date[0]), int(current_date[1]))
+		if current_date >= d0 and ((d1 is None) or (current_date <= d1)):
+			mood_avg = []
+			if int(each["moods"]["mood1"]) != -1:
+				mood_avg.append(int(each["moods"]["mood1"]))
+			if int(each["moods"]["mood2"]) != -1:
+				mood_avg.append(int(each["moods"]["mood2"]))
+
+			if len(mood_avg) == 0:
+				mood_avg = 0
+			else:
+				mood_avg = float(sum(mood_avg)/len(mood_avg))
+			
+			t = each["factors"]
+			for key,value in t.iteritems():
+				t[key] = int(value)
+				if t[key] > -1:
+					t[key] -= 1
+
+			ret.append({
+				'date': each["date"],
+				'moods': mood_avg,
+				'factors': t
+			})
+	
+	return jsonify(status='OK', history=ret)
+
+
+
+
+
 
 
 @app.route('/get_factors', methods=["GET"])

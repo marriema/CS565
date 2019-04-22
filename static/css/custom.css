@@ -133,6 +133,18 @@ input:checked + .slider:before {
   top: 50px;
 }
 
+.visual {
+  position: relative;
+}
+.visual .dropdown {
+  position: absolute;
+  top: 10px;
+}
+.visual canvas {
+  position: absolute;
+  top: 50px;
+}
+
 .period-container {
   background-color: #fef8f3;
 }
