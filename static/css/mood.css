@@ -58,7 +58,7 @@
 	background-color: #540554;
 }
 
-.water, .sleep, .exercise, .alcohol, .caffeine, .sugar, .social, .food{
+.water, .sleep, .exercise, .alcohol, .caffeine, .sugar, .social, .eat{
   margin-top: 20px;
   margin-bottom: 40px;
   width: 100%;
@@ -97,11 +97,11 @@
   border: 6px solid #95a5a6;
 }
 
-.foodcontainer {
+.eatcontainer {
   border: 6px solid #f9b42d;
 }
 
-.watercontainer, .sleepcontainer, .exercisecontainer, .alcoholcontainer, .caffeinecontainer, .sugarcontainer, .socialcontainer, .foodcontainer{
+.watercontainer, .sleepcontainer, .exercisecontainer, .alcoholcontainer, .caffeinecontainer, .sugarcontainer, .socialcontainer, .eatcontainer{
   height: 130px;
   width: 150px;
   margin-left: 20px;

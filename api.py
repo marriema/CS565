@@ -7,6 +7,7 @@ from datetime import date
 
 from mystat import get_topk_factors
 from mystat import get_all_factors_score
+from mystat import dump
 
 app = Flask(__name__)
 app.secret_key = b'_5#y2L"F4Q8z\n\xec]/'
@@ -233,7 +234,7 @@ def getPastFactors():
 		current_date = date(int(current_date[2]), int(current_date[0]), int(current_date[1]))
 		if current_date >= d0 and ((d1 is None) or (current_date <= d1)):
 			mood_avg = []
-		
+
 			if int(float(each["moods"]["mood1"])) != -1:
 				mood_avg.append(int(each["moods"]["mood1"]))
 			if int(float(each["moods"]["mood2"])) != -1:
@@ -302,7 +303,7 @@ def test_add():
 
 @app.route('/test_remove', methods=["GET"])
 def test_remove():
-	uname = 's'
+	uname = 'k'
 	factors.delete_many({
 		'username':uname
 	})
@@ -313,7 +314,10 @@ def test_remove():
 def get_factors():
 	# Retrieve all the everyday moods, factors
 	data = factors.find({"username" : session["username"]})
+	print("data")
+	print(session["username"])
 	data_list = list(data)
+	print(data_list)
 	top_k = get_topk_factors(data_list, 3)
 	return jsonify(status='OK', data = top_k)
 	# Pass the data to stat module
@@ -326,6 +330,16 @@ def get_all_factors():
 	data_list = list(data)
 	all = get_all_factors_score(data_list)
 	return jsonify(status='OK', data = all)
+
+@app.route('/dump_data', methods=["GET"])
+def dump_data():
+	# Retrieve all the everyday moods, factors
+	print("username is")
+	print(session["username"])
+	data = factors.find({"username" : session["username"]})
+	data_list = list(data)
+	dump(data_list)
+	return jsonify(status='OK')
 
 if __name__ == '__main__':
 	app.run(debug = True)

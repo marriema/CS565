@@ -99,3 +99,23 @@ def get_all_factors_score(data_list):
             continue
         ret.append({'name':cols[index_val], 'score': arr[index_val]})
     return ret
+
+def dump(data_list):
+    df_data = {'mood1':[], 'mood2':[], 'alcohol':[], 'caffeine':[], 'sugar':[], 'water':[], 'sleep':[], 'social':[], 'eat':[], 'exercise':[]};
+    farr = ['alcohol', 'caffeine', 'sugar', 'water', 'sleep', 'social', 'eat', 'exercise']
+    marr = ['mood1', 'mood2']
+    for item in data_list:
+        print(item)
+        for m in marr:
+            if m in item['moods']:
+                df_data[m].append(item['moods'][m])
+            else:
+                df_data[m].append(-1)
+        for f in farr:
+            if f in item['factors']:
+                df_data[f].append(item['factors'][f])
+            else:
+                df_data[f].append(-1)
+    df = pd.DataFrame(data=df_data)
+    print(df)
+    df.to_csv('data.csv')
