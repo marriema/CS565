@@ -264,7 +264,7 @@ def getPastFactors():
 
 @app.route('/test_add', methods=["GET"])
 def test_add():
-	uname = 's'
+	uname = 'k'
 	cdate = '04/21/2019'
 	mds = [
 	{'mood1':6, 'mood2':0},
