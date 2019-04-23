@@ -233,9 +233,10 @@ def getPastFactors():
 		current_date = date(int(current_date[2]), int(current_date[0]), int(current_date[1]))
 		if current_date >= d0 and ((d1 is None) or (current_date <= d1)):
 			mood_avg = []
-			if int(each["moods"]["mood1"]) != -1:
+		
+			if int(float(each["moods"]["mood1"])) != -1:
 				mood_avg.append(int(each["moods"]["mood1"]))
-			if int(each["moods"]["mood2"]) != -1:
+			if int(float(each["moods"]["mood2"])) != -1:
 				mood_avg.append(int(each["moods"]["mood2"]))
 
 			if len(mood_avg) == 0:

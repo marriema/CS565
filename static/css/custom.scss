@@ -17,12 +17,30 @@
     }
 }
 
+.indexBut{  
+  font-family:'Lato',sans-serif;
+ 
+  border-color: #ef88a1!important;
+  color: #ef88a1!important;
+}
+
+.indexBut:hover{
+  background: hsl(347, 69%, 87%)!important;
+}
+
 .calendar {
     grid-area: calendar;
+    height: 512px;
+    .card-title {
+      font-family: Georgia, 'Times New Roman', Times, serif;
+      color: #a4cabc
+
+    }
 }
 
 .mood {
     grid-area: mood;
+    height: 512px;
 }
 
 .visual {
@@ -33,6 +51,9 @@
     grid-area: additional;
 }
 
+.mood .card, .calendar .card, .factor .card {
+  height: 100%;
+}
 
 .grid-container {
     display: grid;
@@ -40,7 +61,7 @@
       'header header header'
       'calendar mood factor'
       'visual visual additional';
-    grid-gap: 10px;
+    grid-gap: 50px 10px;
     padding: 0px 50px;
 }
 

@@ -16,7 +16,7 @@
     <script type='text/javascript' src='../static/js/rangeslide.js'></script>
 
 </head>
-<body onclick="detectClick(event)">
+<body style="font-family: Helvetica Neue,Helvetica, Arial,sans-serif" onclick="detectClick(event)">
 
 <style>
 
@@ -30,19 +30,20 @@
         <h1 style="padding-top:20px;padding-bottom:10px;font-family:Abril FatFace;font-weight:bold;color:#ef88a1;font-size:60px">Lunar</h1>
         <img style="position:absolute;left:470px;top:80px" width=30% height=20px src="../static/images/break.png">
         <h4 style="font-family:Old Standard TT;padding-bottom:10px;color:#a4cabc;text-align: center"><i>Know Yourself Better</i></h4>
-        <a style="top: 50px;right:0;position:absolute" href="{{ url_for('logout') }}">Log out</a></h1>
+        <a style="top: 50px;right:0;position:absolute" href="{{ url_for('logout') }}" class="btn btn-outline-secondary indexBut">Log out</a></h1>
     </div>
 
+    <!--<img src="../static/images/mood.gif">-->
     <div class="calendar">
         <div class="card" style="width: 18rem;position:relative;">
             <img class="card-img-top" src="../static/images/lavendar.jpeg" alt="cover">
             <h3 id="date"></h3>
 
-            <p class="card-title">Hello {{ username }}</p>
+            <p class="card-title" style="font-size:25px"><b>Hello, {{ username }}</b></p>
 
             <div class="card-body">
-                <h5 class="card-title">Some update?</h5>
-                <p class="card-text" id=pastPeriods> </p>
+                <h5 class="card-title" style="color:#ef88a1">Some update?</h5>
+                <i><p class="card-text" style="color:#a4cabc" id=pastPeriods></p></i>
             </div>
             <ul class="list-group list-group-flush">
                 <li class="list-group-item">
@@ -63,14 +64,14 @@
 
                 </li>
             </ul>
-            <div class="card-body">
-                <a href="{{ url_for('periodHistory') }}" target="_blank" class="card-link">Cycle History</a>
+            <div class="card-body" style="text-align: center">
+                <a href="{{ url_for('periodHistory') }}" target="_blank" class="btn btn-outline-secondary indexBut">Cycle History</a>
             </div>
         </div>
     </div>
 
     <div class="mood" style="width:25rem">
-      <div class="card" style="width: 100%;position:relative;">
+      <div class="card" id="mood-select" style="width: 100%;position:relative;">
         <div class="mood_slider">
           <div class="slider-inner">
               <div class="slider-origin">
@@ -89,6 +90,10 @@
             <div><span id="mood1">Feeling frisky?</span><button id="set_firstmood" type="button" style="border-color: #7befb2;background-color: #7befb2;margin-left:10px" class="btn btn-primary btn-sm active">Yes!</button></div>
             <div style="margin-top:15px"><span id="mood2">Had a different mood later in the day? select again!</span><button id="set_secondmood" type="button" style="display: none; border-color: #7befb2;background-color: #7befb2;margin-left:10px" class="btn btn-primary btn-sm active">Yes!</button></div>
         </div>
+      </div>
+      <div class="card" id="mood-gif" style="width: 100%;position:relative;border:none">
+        <img width=80% src="../static/images/mood.gif">
+        <p style="color: #74b9ff;">Tip 1: You can record your mood twice a day during your period</p>
       </div>
     </div>
 
@@ -110,7 +115,7 @@
     </div>
 
     <div class="factor" style="width:25rem">
-      <div class="card" style="width: 100%;position:relative;">
+      <div class="card" id="factor-select" style="width: 100%;position:relative;">
         <button id="prevfactor" type="button" class="btn btn-primary btn-sm active"> Prev </button>
 
 
@@ -388,10 +393,17 @@
 
 
       </div>
+
+      <div class="card" id="factor-gif" style="width: 100%;position:relative;border:none">
+            <img width=80% src="../static/images/factor.gif">
+            <p style="color: #74b9ff;">Tip 2: Track your health and daily body data during your shark week! Everything you have recorded 
+                will be saved and analyzed for exploreing your unique body pattern!
+            </p>
+      </div>
     </div>
 
     <div class="additional" style="width:25rem">
-      <div class="card" style="width: 100%;position:relative;margin-top:16%;">
+      <div class="card" style="width: 100%;position:relative;">
         <div class="insight" style="display:flex; flex-direction: column; justify-content:center;">
           <h2 style="padding-left:5%; margin-top:5%">
             Insight
@@ -541,17 +553,24 @@ $(document).ready(function(){
         dataType: 'json',
         contentType: 'application/json; charset=utf-8',
         success: function(response){
-            if(response.lastPeriod == 'none')
+            if(response.lastPeriod == 'none') //new cycle starts
             {
                 $("#pastPeriods").text("Shark week starts? Record it here")
                 $("#endToggle").hide()
                 $("#startToggle").show()
+                $("#mood-select").hide()
+                $("#factor-select").hide()
+                $("#mood-gif").show()
+                $("#factor-gif").show()
+
             }
             else
             {
                 $("#pastPeriods").text("It seems that your current cycle started on " + response.lastPeriod + "\n" +"Does it end?")
                 $("#endToggle").show()
                 $("#startToggle").hide()
+                $("#mood-gif").hide()
+                $("#factor-gif").hide()
             }
         },
         error: function(error){
@@ -611,6 +630,11 @@ if($(this).prop("checked") == true)
                     $("#pastPeriods").text("It seems that your current cycle started on " + response.lastPeriod + "\n" +"Does it end?")
                     $("#endToggle").show()
                     $("#startToggle").hide()
+                    $("#mood-select").show()
+                    $("#factor-select").show()
+                    $("#mood-gif").hide()
+                    $("#factor-gif").hide()
+
                 },
             error: function(error){
                 console.log(error);
@@ -635,6 +659,10 @@ if($(this).prop("checked") == true)
         $("#pastPeriods").text("Shark week starts? Record it here")
         $("#endToggle").hide()
         $("#startToggle").show()
+        $("#mood-select").hide()
+        $("#factor-select").hide()
+        $("#mood-gif").show()
+        $("#factor-gif").show()
     }
     });
 }
