@@ -1,120 +1,120 @@
 .bold{
-    font-weight: 700;
+  font-weight: 700;
 }
 .mood_slider{
-    padding: 50px 0;
-    position: absolute;
-    margin-left: 180px;
-    margin-top: -40px;
+  padding: 50px 0;
+  position: absolute;
+  margin-left: 180px;
+  margin-top: -40px;
 }
 .slider-origin{
-    background-color: #bd2cbd;
-    border-radius: 50%;
-    display: inline-block;
-    position: relative;
+  background-color: #bd2cbd;
+  border-radius: 50%;
+  display: inline-block;
+  position: relative;
 }
 .slider-inner{
-    display: inline-block;
+  display: inline-block;
 }
 .slider-item{
-    width: 74px;
-    height: 100px;
-    background-color: #800080;
-    box-shadow: 0 0 3px 1px rgba(0,0,0,0.1);
-    border-radius: 3px;
-    position: absolute;
-    bottom: 200%;
-    left: 50%;
-    margin-left: -37px;
-		cursor: pointer;
+  width: 74px;
+  height: 100px;
+  background-color: #800080;
+  box-shadow: 0 0 3px 1px rgba(0,0,0,0.1);
+  border-radius: 3px;
+  position: absolute;
+  bottom: 200%;
+  left: 50%;
+  margin-left: -37px;
+  cursor: pointer;
 
-    transform-origin: center 175%;
-    -webkit-transform-origin: center 175%;
-    -ms-transform-origin: center 175%;
-    -moz-transform-origin: center 175%;
+  transform-origin: center 175%;
+  -webkit-transform-origin: center 175%;
+  -ms-transform-origin: center 175%;
+  -moz-transform-origin: center 175%;
 
-    transition: transform 0.5s;
-    -webkit-transition: transform 0.5s;
-    -ms-transition: transform 0.5s;
-    -moz-transition: transform 0.5s;
+  transition: transform 0.5s;
+  -webkit-transition: transform 0.5s;
+  -ms-transition: transform 0.5s;
+  -moz-transition: transform 0.5s;
 
-    text-align: left;
-    color: #fff;
-    padding: 7px;
-    box-sizing: border-box;
+  text-align: left;
+  color: #fff;
+  padding: 7px;
+  box-sizing: border-box;
 
-    -moz-user-select: -moz-none;
-   -khtml-user-select: none;
-   -webkit-user-select: none;
+  -moz-user-select: -moz-none;
+ -khtml-user-select: none;
+ -webkit-user-select: none;
 
-   -ms-user-select: none;
-   user-select: none;
+ -ms-user-select: none;
+ user-select: none;
 }
 .slider-item.active{
-    background-color: purple;
-		cursor: default;
+  background-color: purple;
+  cursor: default;
 }
 .slider-item:not(.active):hover{
-	background-color: #540554;
+background-color: #540554;
 }
 
 .water, .sleep, .exercise, .alcohol, .caffeine, .sugar, .social, .eat{
-  margin-top: 20px;
-  margin-bottom: 40px;
-  width: 100%;
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content:center;
+margin-top: 20px;
+margin-bottom: 40px;
+width: 100%;
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+justify-content:center;
 }
 
 
 .watercontainer {
-  border: 6px solid #74b9ff;
+border: 6px solid #74b9ff;
 }
 
 .sleepcontainer {
-  border: 6px solid #d5b8ff;
+border: 6px solid #d5b8ff;
 }
 
 .exercisecontainer {
-  border: 6px solid #fcd670;
+border: 6px solid #fcd670;
 }
 
 .alcoholcontainer {
-  border: 6px solid #fcd670;
+border: 6px solid #fcd670;
 }
 
 .caffeinecontainer {
-  border: 6px solid #d91e18;
+border: 6px solid #d91e18;
 }
 
 .sugarcontainer {
-  border: 6px solid #d2527f;
+border: 6px solid #d2527f;
 }
 
 .socialcontainer {
-  border: 6px solid #95a5a6;
+border: 6px solid #95a5a6;
 }
 
 .eatcontainer {
-  border: 6px solid #f9b42d;
+border: 6px solid #f9b42d;
 }
 
 .watercontainer, .sleepcontainer, .exercisecontainer, .alcoholcontainer, .caffeinecontainer, .sugarcontainer, .socialcontainer, .eatcontainer{
-  height: 130px;
-  width: 150px;
-  margin-left: 20px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  border-radius: 10%;
+height: 130px;
+width: 150px;
+margin-left: 20px;
+margin-top: 20px;
+margin-bottom: 20px;
+border-radius: 10%;
 
-  display: flex;
-  justify-content: center;
-  align-items: center;
+display: flex;
+justify-content: center;
+align-items: center;
 }
 
 .btn:focus, .btn:active {
-  outline: none !important;
-  box-shadow: none !important;
+outline: none !important;
+box-shadow: none !important;
 }
