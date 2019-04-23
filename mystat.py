@@ -70,7 +70,7 @@ def get_all_factors_score(data_list):
         print(item)
         for m in marr:
             if m in item['moods']:
-                df_data[m].append(6 - item['moods'][m])
+                df_data[m].append(item['moods'][m])
             else:
                 df_data[m].append(-1)
         for f in farr:

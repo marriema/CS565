@@ -723,7 +723,7 @@ $("#set_firstmood").click(function (e) {
     $.ajax({
         type: "POST",
         url: "{{url_for('pastMoods')}}",
-        data: JSON.stringify({ "moods" : {"mood1":mood1, "mood2":""}, "factors" : {}} ),
+        data: JSON.stringify({ "moods" : {"mood1":6 - moods.indexOf(mood1), "mood2":-1}, "factors" : {}} ),
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (data) {
@@ -745,7 +745,7 @@ $("#set_secondmood").click(function (e) {
   $.ajax({
       type: "POST",
       url: "{{url_for('pastMoods')}}",
-      data: JSON.stringify({ "moods" : {"mood1":moods.indexOf(mood1), "mood2":moods.indexOf(mood2)}, "factors" : {}} ),
+      data: JSON.stringify({ "moods" : {"mood1":6 - moods.indexOf(mood1), "mood2":6 - moods.indexOf(mood2)}, "factors" : {}} ),
       contentType: "application/json; charset=utf-8",
       dataType: "json",
       success: function (data) {
@@ -963,7 +963,7 @@ function calculate_mood_score() {
              weighted_sum = Math.round(weighted_sum * 6);
              weighted_sum = Math.min(weighted_sum, 6);
              weighted_sum = Math.max(weighted_sum, 0);
-             weighted_sum = 6 - weighted_sum;
+             //weighted_sum = weighted_sum;
              console.log('weighted_sum')
              console.log(weighted_sum)
 

@@ -268,28 +268,28 @@ def test_add():
 	uname = 's'
 	cdate = '04/21/2019'
 	mds = [
-	{'mood1':0, 'mood2':0},
-	{'mood1':6, 'mood2':6},
-	{'mood1':5, 'mood2':5},
+	{'mood1':6, 'mood2':0},
+	{'mood1':0, 'mood2':6},
+	{'mood1':1, 'mood2':5},
 	{'mood1':3, 'mood2':3},
-	{'mood1':0, 'mood2':0},
-	{'mood1':1, 'mood2':1},
-	{'mood1':5, 'mood2':5},
-	{'mood1':4, 'mood2':5},
-	{'mood1':1, 'mood2':2},
-	{'mood1':1, 'mood2':2}
+	{'mood1':6, 'mood2':0},
+	{'mood1':5, 'mood2':1},
+	{'mood1':1, 'mood2':5},
+	{'mood1':2, 'mood2':5},
+	{'mood1':5, 'mood2':2},
+	{'mood1':5, 'mood2':2}
 	]
 	fs = [
 	{'alcohol':1, 'caffeine':1, 'sugar':1, 'water':1, 'sleep':3, 'social':4, 'eat':2, 'exercise':4},
-	{'alcohol':4, 'caffeine':4, 'sugar':4, 'water':2, 'sleep':1, 'social':1, 'eat':2, 'exercise':1},
-	{'alcohol':3, 'caffeine':4, 'sugar':3, 'water':3, 'sleep':2, 'social':2, 'eat':2, 'exercise':2},
+	{'alcohol':4, 'caffeine':4, 'sugar':4, 'water':2, 'sleep':1, 'social':1, 'eat':3, 'exercise':1},
+	{'alcohol':3, 'caffeine':4, 'sugar':3, 'water':3, 'sleep':2, 'social':2, 'eat':1, 'exercise':2},
 	{'alcohol':2, 'caffeine':2, 'sugar':2, 'water':4, 'sleep':2, 'social':2, 'eat':2, 'exercise':2},
 	{'alcohol':2, 'caffeine':2, 'sugar':2, 'water':1, 'sleep':4, 'social':4, 'eat':2, 'exercise':4},
-	{'alcohol':1, 'caffeine':1, 'sugar':1, 'water':2, 'sleep':3, 'social':3, 'eat':2, 'exercise':3},
+	{'alcohol':1, 'caffeine':1, 'sugar':1, 'water':2, 'sleep':3, 'social':3, 'eat':4, 'exercise':3},
 	{'alcohol':4, 'caffeine':4, 'sugar':4, 'water':3, 'sleep':2, 'social':1, 'eat':2, 'exercise':1},
-	{'alcohol':3, 'caffeine':3, 'sugar':4, 'water':4, 'sleep':1, 'social':2, 'eat':2, 'exercise':1},
+	{'alcohol':3, 'caffeine':3, 'sugar':4, 'water':4, 'sleep':1, 'social':2, 'eat':3, 'exercise':1},
 	{'alcohol':1, 'caffeine':1, 'sugar':1, 'water':1, 'sleep':4, 'social':4, 'eat':2, 'exercise':3},
-	{'alcohol':2, 'caffeine':2, 'sugar':1, 'water':2, 'sleep':3, 'social':4, 'eat':2, 'exercise':4}
+	{'alcohol':2, 'caffeine':2, 'sugar':1, 'water':2, 'sleep':3, 'social':4, 'eat':0, 'exercise':4}
 	]
 	for i in range(10):
 		factors.insert_one({
@@ -298,6 +298,15 @@ def test_add():
 			'factors':fs[i],
 			'moods':mds[i],
 		})
+	return jsonify(status='OK')
+
+@app.route('/test_remove', methods=["GET"])
+def test_remove():
+	uname = 's'
+	factors.delete_many({
+		'username':uname
+	})
+
 	return jsonify(status='OK')
 
 @app.route('/get_factors', methods=["GET"])
